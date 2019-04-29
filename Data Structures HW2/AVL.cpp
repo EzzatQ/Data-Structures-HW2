@@ -7,3 +7,12 @@
 //
 
 #include "AVL.hpp"
+int main(){
+	using DataStructures::AVLTree;
+	AVLTree<int, int> a;
+	a.insert(1, 1);
+	a.insert(0, 0);
+	a.insert(2, 2);
+
+	
+}

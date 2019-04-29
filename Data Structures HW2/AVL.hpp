@@ -46,8 +46,6 @@ namespace DataStructures{
 		}
 	};
 	
-	
-	
 	template < class K, class D>
 	class node{
 		K key;
@@ -56,10 +54,13 @@ namespace DataStructures{
 		node* left;
 		node* right;
 		int kids;
-		int BL;
 		
 	public:
-		node(const K& key, const D& data): key(key), data(data), parent(parent), left(nullptr), right(nullptr), kids(0), BL(0){}
+		
+		int BL;
+		
+		node(const K& key, D& data, node* parent = nullptr): key(key), data(data), parent(parent), left(nullptr), right(nullptr), kids(0), BL(0){}
+		
 		node(node& n){
 			this->key = n->key;
 			this->data = n->data;
@@ -78,27 +79,61 @@ namespace DataStructures{
 		const K& getKey() const { return key;}
 		const D& getData() const { return data;}
 		const int getKids() const {return kids;}
+		const int getBL() const {return BL;}
 		node* getLeft(){ return left;}
 		node* getRight(){ return right;}
 		node* getParent(){ return parent;}
 		
-		void addLeft(node* n){
-			this->left = n;
-			kids++;
+		void setLeft(node* n){
+			if(!n && !this->left){
+				return;
+			}
+			if(!n && this->left){
+				this->left = nullptr;
+				kids--;
+				return;
+			}
+			if(n && !this->left){
+				this->left = n;
+				kids++;
+			}
+			if(n && this->left){
+				this->left = n;
+				return;
+			}
 		}
-		void addRight(node* n){
-			this->right = n;
-			kids++;
+		
+		void setRight(node* n){
+			if(!n && !this->right){
+				return;
+			}
+			if(!n && this->right){
+				this->right = nullptr;
+				kids--;
+				return;
+			}
+			if(n && !this->right){
+				this->right = n;
+				kids++;
+			}
+			if(n && this->right){
+				this->right = n;
+				return;
+			}
 		}
-		void addParent(node* n){ this->parent = n;}
+		
+		void setParent(node* n){ this->parent = n;}
+		
 		void removeLeft(){
 			this->left = nullptr;
 			kids--;
 		}
+		
 		void removeRight(){
 			this->right = nullptr;
 			kids--;
 		}
+		
 		void removeParent(node* n){ this->parent = nullptr;}
 	};
 	
@@ -110,7 +145,7 @@ namespace DataStructures{
 		int nodeCount;
 		
 		void deleteSubTree(node<K,D>* root);
-		bool contains(K& key);
+		bool contains(const K& key);
 		bool contains_aux(K& key, node<K,D>* node);
 		void insert_aux(node<K, D>* n, node<K, D>* in);
 		void balance(node<K, D>* n);
@@ -130,11 +165,11 @@ namespace DataStructures{
 		node<K,D>* getRoot(){ return root;}
 		int getNodeCount(){ return nodeCount;}
 		
-		void insert(K& key, D& data);
+		void insert(const K& key, D data);
 		void deleteNode(node<K,D>* node);
 		
-		int getHight(node<K,D>* node) const;
-		int getBF(node<K,D>* node) const;
+		int getHight(const node<K,D>* node) const;
+		int getBF(const node<K,D>* node) const;
 		
 		void preOrder(node<K,D>* node) const;
 		void inOrder(node<K,D>* node) const;
@@ -151,7 +186,7 @@ namespace DataStructures{
 	}
 	
 	template<class K, class D>
-	void AVLTree<K,D>::deleteSubTree(node<K, D> *root){
+	void AVLTree<K,D>::deleteSubTree(node<K, D>* root){
 		if(root){
 			deleteSubTree(root->getLeft());
 			deleteSubTree(root->getRight());
@@ -161,7 +196,7 @@ namespace DataStructures{
 	}
 	
 	template<class K, class D>
-	bool AVLTree<K,D>::contains(K& key){ AVLTree<K,D>::contains_aux(key, root);}
+	bool AVLTree<K,D>::contains(const K& key){ AVLTree<K,D>::contains_aux(key, root);}
 	
 	template<class K, class D>
 	bool AVLTree<K,D>::contains_aux(K& key, node<K,D>* node){
@@ -173,7 +208,7 @@ namespace DataStructures{
 	}
 	
 	template <class K, class D>
-	void AVLTree<K, D>::insert(K& key, D& data){
+	void AVLTree<K, D>::insert(const K& key, D data){
 		node<K, D>* new_n = new (std::nothrow) node<K, D>(key, data);
 		if(!new_n) throw OutOfMemory();
 		if(!this->root) root = new_n;
@@ -185,11 +220,11 @@ namespace DataStructures{
 		if(n->getData() <= in->getData()){
 			if(n->getLeft()){
 				AVLTree<K,D>::insert_aux(n->getLeft(),in);
-				n->BL++;
+				n-> BL++;
 			}
 			else {
-				n->addLeft(in);
-				in->SetParent(n);
+				n->setLeft(in);
+				n->setParent(n);
 				n->BL++;
 			}
 		}
@@ -198,68 +233,125 @@ namespace DataStructures{
 			n->BL--;
 		}
 		else {
-			n->addRight(in);
-			in->addParent(n);
+			n->setRight(in);
+			in->setParent(n);
 			n->BL--;
 		}
 		balance(n);
 	}
-	
+
 	template<class K, class D>
 	void AVLTree<K, D>::balance(node<K, D>* n){
-		if(n->Bb == 2 && n->getLeft() == -1);
-		if(n->Bb == 2 && n->getLeft() >= 0);
-		if(n->Bb == -2 && n->getRight() <= 0);
-		if(n->Bb == -2 && n->getRight()() == 1);
-		if(n->BF > 1){
-			if(n->GetLeft()->BF < 0 ){
-				rotateLeft( n->GetLeft() );
-				rotateRight(n);
-			}
+		if(!n) return;
+		if(n->BL == 2 && n->getLeft()->BL == -1){    //LR
+			rotateRight(n->getLeft());
+			rotateLeft(n);
 		}
-		else {
-			if(n->GetRight()->BF > 0 ){
-				rotateRight(n->GetRight());
-				rotateLeft(n);
-			}
+		if(n->BL == 2 && n->getLeft()->BL >= 0){     //LL
+			rotateLeft(n);
+		}
+		if(n->BL == -2 && n->getRight()->BL <= 0){   //RR
+			rotateRight(n);
+		}
+		if(n->BL == -2 && n->getRight()->BL == 1){    //RL
+			rotateLeft(n->getRight());
+			rotateLeft(n);
 		}
 	}
 	
 	template<class K, class D>
-	void AVLTree<K, D>::rotateLeft(node<K,D>* node){
-		node<K, D>* B = n;
-		node<K,D>* A = n->
+	void AVLTree<K, D>::rotateRight(node<K,D>* n){
+		if(!n) return;
+		node<K, D>* r = n;
+		node<K, D>* l = n->getLeft();
+		node<K, D>* rParent = r->getParent();
+		r->setParent(l->getParent());
+		(l->getRight())->setParent(r);
+		l->setParent(rParent);
+		r->setLeft(l->getRight());
+		l->setRight(r);
+		n = l;
+		r->BL += 1;
+		if (l->BL < 0) r->BL += -l->BL;
+		l->BL += 1;
+		if (r->BL > 0) l->BL += r->BL;
 	}
 	
 	template<class K, class D>
-	void AVLTree<K, D>::rotateRight(node<K,D>* node){
-		
+	void AVLTree<K, D>::rotateLeft(node<K,D>* n){
+		if(!n) return;
+		node<K, D>* l = n;
+		node<K, D>* r = n->getRight();
+		node<K, D>* lParent = l->getParent();
+		l->setParent(r);
+		(r->getLeft())->setParent(l);
+		r->setParent(lParent);
+		l->setRight(r->getLeft());
+		r->setLeft(l);
+		n = r;
+		l->BL -= 1;
+		if (r->BL > 0) l->BL -= r->BL;
+		r->BL -= 1;
+		if (l->BL < 0) r->BL -= -l->BL;
 	}
 	
+
+/////////////////////////PRINTING FUNCTION AND AUX//////////////////////////////
+	struct Trunk
+	{
+		Trunk *prev;
+		std::string str;
 		
+		Trunk(Trunk *prev, std::string str)
+		{
+			this->prev = prev;
+			this->str = str;
+		}
+	};
+	
+	void showTrunks(Trunk *p) {
+		if (p == nullptr)
+			return;
 		
-		//	void RotateRight(node* n){
-		//		node* r = n;
-		//		node* l = n->left;
-		//		r->left = l->right;
-		//		l->right = r;
-		//		n = l;
-		//		r->BL += 1;
-		//		if (l->BL < 0) r->BL += -l->BL;
-		//		l->BL += 1;
-		//		if (r->BL > 0) l->BL += r->BL;
-		//	}
-		//
-		//	void RotateLeft(node* n){
-		//		node* r = n;
-		//		node* l = n->right;
-		//		r->right = l->left;
-		//		l->left  = r;
-		//		n = l;
-		//		r->BL -= 1;
-		//		if (l->BL > 0) r->BL -= l->BL;
-		//		l->BL -= 1;
-		//		if (r->BL < 0) l->BL -= -r->BL;
+		showTrunks(p->prev);
+		
+		std::cout << p->str;
+	}
+	
+	template<class K, class D>
+	void printTree(node<K,D>* root, Trunk *prev, bool isLeft){
+		if (root == nullptr)
+			return;
+		
+		std::string prev_str = "	";
+		Trunk *trunk = new Trunk(prev, prev_str);
+		
+		printTree(root->left, trunk, true);
+		
+		if (!prev)
+			trunk->str = "---";
+		else if (isLeft)
+		{
+			trunk->str = ".---";
+			prev_str = "   |";
+		}
+		else
+		{
+			trunk->str = "`---";
+			prev->str = prev_str;
+		}
+		
+		showTrunks(trunk);
+		std::cout << root->data << std::endl;
+		
+		if (prev)
+			prev->str = prev_str;
+		trunk->str = "   |";
+		
+		printTree(root->right, trunk, false);
+	}
+////////////////////////////////////////////////////////////////////////////////
+
 	
 }
 		
