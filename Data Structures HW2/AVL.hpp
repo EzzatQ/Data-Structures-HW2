@@ -59,7 +59,7 @@ namespace DataStructures{
 		
 		int BL;
 		
-		node(const K& key, D& data, node* parent = nullptr): key(key), data(data), parent(parent), left(nullptr), right(nullptr), kids(0), BL(0){}
+		node(const K& key, D& data): key(key), data(data), parent(nullptr), left(nullptr), right(nullptr), kids(0), BL(0){}
 		
 		node(node& n){
 			this->key = n->key;
@@ -211,7 +211,10 @@ namespace DataStructures{
 	void AVLTree<K, D>::insert(const K& key, D data){
 		node<K, D>* new_n = new (std::nothrow) node<K, D>(key, data);
 		if(!new_n) throw OutOfMemory();
-		if(!this->root) root = new_n;
+		if(!this->root){
+			root = new_n;
+			
+		}
 		else insert_aux(this->root, new_n);
 	}
 	
@@ -220,15 +223,15 @@ namespace DataStructures{
 		if(n->getData() <= in->getData()){
 			if(n->getLeft()){
 				AVLTree<K,D>::insert_aux(n->getLeft(),in);
-				n-> BL++;
+				n->BL++;
 			}
 			else {
 				n->setLeft(in);
-				n->setParent(n);
+				in->setParent(n);
 				n->BL++;
 			}
 		}
-		else if(n->getRight()) {
+		else if(n->getRight()){
 			AVLTree<K,D>::insert_aux(n->getRight(), in);
 			n->BL--;
 		}
@@ -282,7 +285,7 @@ namespace DataStructures{
 		if(!n) return;
 		node<K, D>* l = n;
 		node<K, D>* r = n->getRight();
-		node<K, D>* lParent = l->getParent();
+		node<K, D>* lParent = l->getParent();//////
 		l->setParent(r);
 		(r->getLeft())->setParent(l);
 		r->setParent(lParent);
@@ -326,7 +329,7 @@ namespace DataStructures{
 		std::string prev_str = "	";
 		Trunk *trunk = new Trunk(prev, prev_str);
 		
-		printTree(root->left, trunk, true);
+		printTree(root->getLeft(), trunk, true);
 		
 		if (!prev)
 			trunk->str = "---";
@@ -342,13 +345,13 @@ namespace DataStructures{
 		}
 		
 		showTrunks(trunk);
-		std::cout << root->data << std::endl;
+		std::cout << root->getData() << std::endl;
 		
 		if (prev)
 			prev->str = prev_str;
 		trunk->str = "   |";
 		
-		printTree(root->right, trunk, false);
+		printTree(root->getRight(), trunk, false);
 	}
 ////////////////////////////////////////////////////////////////////////////////
 
