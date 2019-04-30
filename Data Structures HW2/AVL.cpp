@@ -11,9 +11,9 @@ int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
 	AVLTree<int, int> a;
-	a.insert(0,0);
-	printTree(a.getRoot(), nullptr, false);
 	a.insert(1,1);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(0,0);
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(2,2);
 	printTree(a.getRoot(), nullptr, false);
