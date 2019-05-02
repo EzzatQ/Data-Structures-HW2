@@ -11,11 +11,21 @@ int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
 	AVLTree<int, int> a;
-	a.insert(0,0);
+	a.insert(10,10);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(9,9);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(2,2);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(37, 37);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(18,18);
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(1,1);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(2,2);
+	a.insert(39,39);
+	printTree(a.getRoot(), nullptr, false);
+	a.insert(4,4);
 	printTree(a.getRoot(), nullptr, false);
 	
 }

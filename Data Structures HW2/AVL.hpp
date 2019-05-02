@@ -149,12 +149,13 @@ namespace DataStructures{
 		bool contains_aux(K& key, node<K,D>* node);
 		void insert_aux(node<K, D>* n, node<K, D>* in);
 		void balance(node<K, D>* n);
+		node<K,D>* copyNodes(node<K,D>* head, node<K,D>* parent);
 		
 	public:
 		AVLTree(): root(nullptr), nodeCount(0){}
 		~AVLTree();
-		AVLTree(AVLTree& avl){ //need to copy all the nodes
-			this->head = avl->head;
+		AVLTree(AVLTree& avl){
+			this->head = copyNodes(avl->head, nullptr);
 			this->treeHight = avl->treeHight;
 			this->nodeCount = avl->nodeCount;
 		}
@@ -166,14 +167,14 @@ namespace DataStructures{
 		int getNodeCount(){ return nodeCount;}
 		
 		void insert(const K& key, D data);
-		void deleteNode(node<K,D>* node);
-		
-		int getHight(const node<K,D>* node) const;
-		int getBF(const node<K,D>* node) const;
-		
-		void preOrder(node<K,D>* node) const;
-		void inOrder(node<K,D>* node) const;
-		void postOrder(node<K,D>* node) const;
+
+//		STILL GOTTA DO THESE FUNCTIONS
+//		int getHight(const node<K,D>* node) const;
+//		int getBF(const node<K,D>* node) const;
+//
+//		void preOrder(node<K,D>* node) const;
+//		void inOrder(node<K,D>* node) const;
+//		void postOrder(node<K,D>* node) const;
 		
 		static void rotateLeft(node<K,D>* node);
 		static void rotateRight(node<K,D>* node);
@@ -185,6 +186,7 @@ namespace DataStructures{
 		if(root) deleteSubTree(root);
 	}
 	
+	//deletes passed noode and all its children.0
 	template<class K, class D>
 	void AVLTree<K,D>::deleteSubTree(node<K, D>* root){
 		if(root){
@@ -195,8 +197,10 @@ namespace DataStructures{
 		
 	}
 	
+	//Function looks ifthe key exists in the current tree.
 	template<class K, class D>
 	bool AVLTree<K,D>::contains(const K& key){ AVLTree<K,D>::contains_aux(key, root);}
+	
 	
 	template<class K, class D>
 	bool AVLTree<K,D>::contains_aux(K& key, node<K,D>* node){
@@ -207,6 +211,7 @@ namespace DataStructures{
 		return false;
 	}
 	
+	//inserts new node
 	template <class K, class D>
 	void AVLTree<K, D>::insert(const K& key, D data){
 		node<K, D>* new_n = new (std::nothrow) node<K, D>(key, data);
@@ -218,6 +223,8 @@ namespace DataStructures{
 		else insert_aux(this->root, new_n);
 	}
 	
+	
+	//recursive algorithm to find and insert a key and data in the correct place
 	template <class K, class D>
 	void AVLTree<K, D>::insert_aux(node<K, D>* n, node<K, D>* in){
 		if(n->getData() <= in->getData()){
@@ -243,6 +250,8 @@ namespace DataStructures{
 		balance(n);
 	}
 
+	//Depending on whoich situation the tree is in, performs needed rotations to
+	// keep tree balanced
 	template<class K, class D>
 	void AVLTree<K, D>::balance(node<K, D>* n){
 		if(!n) return;
@@ -263,33 +272,51 @@ namespace DataStructures{
 	}
 	
 	template<class K, class D>
+	node<K,D>* AVLTree<K,D>::copyNodes(node<K,D>* head, node<K,D>* parent){
+		if(!head) return;
+		node<K, D>* new_n = new (std::nothrow) node<K, D>(head);
+		if(!new_n) throw OutOfMemory();
+		new_n->setParent(parent);
+		new_n->setLeft(AVLTree<K,D>::copyNodes(head->getLeft(), new_n));
+		new_n->setRight(AVLTree<K,D>::copyNodes(head->getRight(), new_n));
+		return new_n;
+	}
+	
+	//i think theres a bug here: we need to think oh how to do this when r and l
+	//can also be nullptr. and theres a  mikre katseh. when n = head, we need to
+	//change the head of the tree itself and update the parrent of the node!
+	template<class K, class D>
 	void AVLTree<K, D>::rotateRight(node<K,D>* n){
 		if(!n) return;
 		node<K, D>* r = n;
 		node<K, D>* l = n->getLeft();
-		node<K, D>* rParent = r->getParent();
-		r->setParent(l->getParent());
-		(l->getRight())->setParent(r);
+		node<K, D>* rParent = !r ? nullptr : r->getParent();
+		node<K, D>* lParent = !l ? nullptr : l->getParent();
+		node<K, D>* lRight = !l ? nullptr : l->getRight();
+		r->setParent(lParent);
+		lRight->setParent(r);
 		l->setParent(rParent);
-		r->setLeft(l->getRight());
+		r->setLeft(lRight);
 		l->setRight(r);
 		n = l;
-		r->BL += 1;
+		r->BL += 1;					//////////////
 		if (l->BL < 0) r->BL += -l->BL;
 		l->BL += 1;
 		if (r->BL > 0) l->BL += r->BL;
 	}
 	
+	//SAME EXACT THING HERE
 	template<class K, class D>
 	void AVLTree<K, D>::rotateLeft(node<K,D>* n){
 		if(!n) return;
 		node<K, D>* l = n;
 		node<K, D>* r = n->getRight();
-		node<K, D>* lParent = l->getParent();//////
+		node<K, D>* lParent = !l ? nullptr : l->getParent();
+		node<K, D>* rLeft = !r ? nullptr : r->getLeft();
 		l->setParent(r);
-		(r->getLeft())->setParent(l);
+		rLeft->setParent(l);
 		r->setParent(lParent);
-		l->setRight(r->getLeft());
+		l->setRight(rLeft);
 		r->setLeft(l);
 		n = r;
 		l->BL -= 1;
