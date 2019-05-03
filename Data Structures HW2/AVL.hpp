@@ -165,6 +165,7 @@ namespace DataStructures{
 	template< class K, class D>
 	class AVLTree {
 		node<K, D>* root;
+		int nodeCount;
 		
 		void deleteSubTree(node<K,D>* root);
 		bool contains(const K& key);
@@ -172,16 +173,18 @@ namespace DataStructures{
 		void insert_aux(node<K, D>* n, node<K, D>* in);
 		void remove_aux(const K& key, node<K,D>* n);
 		void balance(node<K, D>* n);
+		void balanceAll(node<K,D>* son);
 		node<K,D>* copyNodes(node<K,D>* head, node<K,D>* parent);
 	public: void swapNodes(node<K, D>* a, node<K, D>* b);
 		
 	public:
-		AVLTree(): root(nullptr){}
+		AVLTree(): root(nullptr), nodeCount(0){}
 		~AVLTree();
 		AVLTree(AVLTree& avl){
 			this->head = copyNodes(avl->head, nullptr);
-			this->treeHight = avl->treeHight;
+			nodeCount = avl->nodeCount;
 		}
+		
 		AVLTree& operator=(const AVLTree& avl){
 			this(avl);
 			return &this;
@@ -198,7 +201,6 @@ namespace DataStructures{
 		
 		void rotateLeft(node<K,D>* node);
 		void rotateRight(node<K,D>* node);
-		
 	};
 	
 	template<class K, class D>
@@ -327,6 +329,7 @@ namespace DataStructures{
 	template<class K, class D>
 	void AVLTree<K,D>::remove_aux(const K& key, node<K,D>* n){
 		if(!n) return;
+		node<K,D>* parent = n->getParent();
 		if(n->getKey() == key){
 			if(n->getKids() == 0){
 				if(n == root) root = nullptr;
@@ -351,10 +354,10 @@ namespace DataStructures{
 				swapNodes(n, itr);
 				AVLTree<K,D>::remove_aux(key, n);
 			}
-			balance(n->getParent());
 		}
 		else if(n->getKey() > key) AVLTree<K,D>::remove_aux(key, n->getLeft());
 		AVLTree<K,D>::remove_aux(key, n->getRight());
+		balanceAll(parent);
 	}
 	
 	//Depending on whoich situation the tree is in, performs needed rotations to
@@ -376,15 +379,17 @@ namespace DataStructures{
 				rotateLeft(n);
 			}
 			if(n->BF == -2 && n->getRight()->BF == 1){    //RL
-				std::cout << "before rotation\n";
-				printTree(root, nullptr, false);
 				rotateRight(n->getRight());
-				std::cout << "between rotations\n";
-				printTree(root, nullptr, false);
 				rotateLeft(n);
-				
 			}
 		}
+	}
+
+	template<class K, class D>
+	void AVLTree<K,D>::balanceAll(node<K,D>* son){
+		if(!son) return;
+		balance(son);
+		balanceAll(son->getParent());
 	}
 	
 	//Does a right rotation on the passed node
