@@ -165,7 +165,6 @@ namespace DataStructures{
 	template< class K, class D>
 	class AVLTree {
 		node<K, D>* root;
-		int nodeCount;
 		
 		void deleteSubTree(node<K,D>* root);
 		bool contains(const K& key);
@@ -177,19 +176,18 @@ namespace DataStructures{
 	public: void swapNodes(node<K, D>* a, node<K, D>* b);
 		
 	public:
-		AVLTree(): root(nullptr), nodeCount(0){}
+		AVLTree(): root(nullptr){}
 		~AVLTree();
 		AVLTree(AVLTree& avl){
 			this->head = copyNodes(avl->head, nullptr);
 			this->treeHight = avl->treeHight;
-			this->nodeCount = avl->nodeCount;
 		}
 		AVLTree& operator=(const AVLTree& avl){
 			this(avl);
 			return &this;
 		}
+        
 		node<K,D>* getRoot(){ return root;}
-		int getNodeCount(){ return nodeCount;}
 		
 		void insert(const K& key, D data);
 		void remove(const K& key);

@@ -15,6 +15,8 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(9,9);
 	printTree(a.getRoot(), nullptr, false);
+	a.insert(0,0);
+	printTree(a.getRoot(), nullptr, false);
 	a.insert(2,2);
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(37, 37);
