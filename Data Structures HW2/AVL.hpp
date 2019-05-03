@@ -161,19 +161,6 @@ namespace DataStructures{
 		
 	};
 	
-	template<class K, class D>
-	void swapNodes(node<K,D>* a, node<K,D>* b){
-		node<K,D>* aParent = a->getParent();
-		node<K,D>* bParent = b->getParent();
-		if(a->getLeft()) a->getLeft()->setParent(bParent);
-		if(a->getRight()) a->getRight()->setParent(bParent);
-		if(b->getLeft()) b->getLeft()->setParent(aParent);
-		if(b->getRight()) b->getRight()->setParent(aParent);
-		node<K,D>* temp = b;
-		b = a;
-		a = temp;
-	}
-	
 	//Assuming class K has comparing operators
 	template< class K, class D>
 	class AVLTree {
@@ -187,6 +174,7 @@ namespace DataStructures{
 		void remove_aux(const K& key, node<K,D>* n);
 		void balance(node<K, D>* n);
 		node<K,D>* copyNodes(node<K,D>* head, node<K,D>* parent);
+	public: void swapNodes(node<K, D>* a, node<K, D>* b);
 		
 	public:
 		AVLTree(): root(nullptr), nodeCount(0){}
@@ -231,6 +219,42 @@ namespace DataStructures{
 		return new_n;
 	}
 	
+	template<class K, class D>
+	void AVLTree<K,D>::swapNodes(node<K,D>* a, node<K,D>* b){
+		node<K,D>* aParent = a->getParent();
+		node<K,D>* bParent = b->getParent();
+		if(aParent == bParent){
+			if(a == root && b != root) root = b;
+			if(b == root && a != root) root = a;
+			if(aParent->getLeft() == a){
+				aParent->setLeft(b);
+				aParent->setRight(a);
+			}
+			else{
+				aParent->setLeft(a);
+				aParent->setRight(b);
+			}
+		} else {
+		if(a == root && b != root) root = b;
+		else if(aParent->getLeft() == a) aParent->setLeft(b);
+		else if(aParent->getRight() == a) aParent->setRight(b);
+		if(b == root && a != root) root = a;
+		else if(bParent->getLeft() == b) bParent->setLeft(a);
+		else if(bParent->getRight() == b) bParent->setRight(a);
+		}
+		node<K,D>* tempR = a->getRight();
+		node<K,D>* tempL = a->getLeft();
+		a->setRight(b->getRight());
+		a->setLeft(b->getLeft());
+		b->setRight(tempR);
+		b->setLeft(tempL);
+		if(a->getLeft()) a->getLeft()->setParent(b);
+		if(a->getRight()) a->getRight()->setParent(b);
+		if(b->getLeft()) b->getLeft()->setParent(a);
+		if(b->getRight()) b->getRight()->setParent(a);
+
+	}
+
 	//deletes passed noode and all its children.
 	template<class K, class D>
 	void AVLTree<K,D>::deleteSubTree(node<K, D>* root){
@@ -254,6 +278,8 @@ namespace DataStructures{
 		if(key > node_key) return contains_aux(key, node->getRight());
 		return false;
 	}
+	
+	
 	
 	//inserts new node in its right place
 	template <class K, class D>
