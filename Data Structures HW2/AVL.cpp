@@ -27,5 +27,10 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(4,4);
 	printTree(a.getRoot(), nullptr, false);
-	
+	a.remove(10);
+	printTree(a.getRoot(), nullptr, false);
+	a.remove(37);
+	printTree(a.getRoot(), nullptr, false);
+	a.remove(18);
+	printTree(a.getRoot(), nullptr, false);
 }
