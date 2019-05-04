@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E045001227CE127003F36C9 /* CS_system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E044FFF227CE127003F36C9 /* CS_system.cpp */; };
+		1E045004227D8130003F36C9 /* courseData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E045002227D8130003F36C9 /* courseData.cpp */; };
 		52C32D0C2266276000AAF835 /* AVL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52C32D0A2266276000AAF835 /* AVL.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,9 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E044FFF227CE127003F36C9 /* CS_system.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CS_system.cpp; sourceTree = "<group>"; };
+		1E045002227D8130003F36C9 /* courseData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = courseData.cpp; sourceTree = "<group>"; };
+		1E045003227D8130003F36C9 /* courseData.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = courseData.hpp; sourceTree = "<group>"; };
 		52C32CFD2266259900AAF835 /* Data Structures HW2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Data Structures HW2"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52C32D07226626E500AAF835 /* library.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = library.h; sourceTree = "<group>"; };
-		52C32D08226626E500AAF835 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../main.cpp; sourceTree = "<group>"; };
 		52C32D0A2266276000AAF835 /* AVL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AVL.cpp; sourceTree = "<group>"; };
 		52C32D0B2266276000AAF835 /* AVL.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AVL.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,9 +65,11 @@
 			isa = PBXGroup;
 			children = (
 				52C32D07226626E500AAF835 /* library.h */,
-				52C32D08226626E500AAF835 /* main.cpp */,
 				52C32D0A2266276000AAF835 /* AVL.cpp */,
 				52C32D0B2266276000AAF835 /* AVL.hpp */,
+				1E044FFF227CE127003F36C9 /* CS_system.cpp */,
+				1E045002227D8130003F36C9 /* courseData.cpp */,
+				1E045003227D8130003F36C9 /* courseData.hpp */,
 			);
 			path = "Data Structures HW2";
 			sourceTree = "<group>";
@@ -124,6 +130,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E045004227D8130003F36C9 /* courseData.cpp in Sources */,
+				1E045001227CE127003F36C9 /* CS_system.cpp in Sources */,
 				52C32D0C2266276000AAF835 /* AVL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,7 +254,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JJBXCYA32Y;
+				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -255,7 +263,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JJBXCYA32Y;
+				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

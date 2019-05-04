@@ -155,7 +155,7 @@ namespace DataStructures{
 			int lheight = left ? left->height : 0;
 			int rheight = right ? right->height : 0;
 			height = lheight > rheight ? lheight : rheight;
-			height++;
+			height++; ///???
 			BF = lheight - rheight;
 		}
 		
