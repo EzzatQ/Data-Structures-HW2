@@ -29,13 +29,9 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(4,4);
 	printTree(a.getRoot(), nullptr, false);
-    /*
-//	a.swapNodes(a.getRoot(), a.getRoot()->getRight()->getLeft());
-//	printTree(a.getRoot(), nullptr, false);
-	a.remove(10);
+	a.remove(1);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(37);
+	a.remove(9);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(18);
-	printTree(a.getRoot(), nullptr, false);*/
+
 }

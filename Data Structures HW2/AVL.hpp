@@ -78,15 +78,23 @@ namespace DataStructures{
 		}
 		
 		~node(){}
-		const K& getKey() const { return key;}
-		const D& getData() const { return data;}
-		const int getKids() const {return kids;}
-		const int getBF() const { update(); return BF;}
-		const int getHeight() const { update(); return height;}
+		K& getKey() { return key;}
+		D& getData() { return data;}
+		int getKids() {return kids;}
+		int getBF() { update(); return BF;}
+		int getHeight() { update(); return height;}
 		
 		node* getLeft(){ return left;}
 		node* getRight(){ return right;}
 		node* getParent(){ return parent;}
+		
+		void setKey(K& key){
+			this->key = key;
+		}
+		
+		void setData(D& data){
+			this->data = data;
+		}
 		
 		void setLeft(node* n){
 			if(!n && !left){
@@ -195,10 +203,6 @@ namespace DataStructures{
 		void insert(const K& key, D data);
 		void remove(const K& key);
 		
-		//		void preOrder(node<K,D>* node) const;
-		//		void inOrder(node<K,D>* node) const;
-		//		void postOrder(node<K,D>* node) const;
-		
 		void rotateLeft(node<K,D>* node);
 		void rotateRight(node<K,D>* node);
 	};
@@ -208,6 +212,7 @@ namespace DataStructures{
 		if(root) deleteSubTree(root);
 	}
 	
+	//Copies all subtree of given head (parent pointer is for setting the heads parent node)
 	template<class K, class D>
 	node<K,D>* AVLTree<K,D>::copyNodes(node<K,D>* head, node<K,D>* parent){
 		if(!head) return;
@@ -219,40 +224,15 @@ namespace DataStructures{
 		return new_n;
 	}
 	
+	//Swaps location of two given nodes (this is used for a special case in the remove function)
 	template<class K, class D>
 	void AVLTree<K,D>::swapNodes(node<K,D>* a, node<K,D>* b){
-		node<K,D>* aParent = a->getParent();
-		node<K,D>* bParent = b->getParent();
-		if(aParent == bParent){
-			if(a == root && b != root) root = b;
-			if(b == root && a != root) root = a;
-			if(aParent->getLeft() == a){
-				aParent->setLeft(b);
-				aParent->setRight(a);
-			}
-			else{
-				aParent->setLeft(a);
-				aParent->setRight(b);
-			}
-		} else {
-		if(a == root && b != root) root = b;
-		else if(aParent->getLeft() == a) aParent->setLeft(b);
-		else if(aParent->getRight() == a) aParent->setRight(b);
-		if(b == root && a != root) root = a;
-		else if(bParent->getLeft() == b) bParent->setLeft(a);
-		else if(bParent->getRight() == b) bParent->setRight(a);
-		}
-		node<K,D>* tempR = a->getRight();
-		node<K,D>* tempL = a->getLeft();
-		a->setRight(b->getRight());
-		a->setLeft(b->getLeft());
-		b->setRight(tempR);
-		b->setLeft(tempL);
-		if(a->getLeft()) a->getLeft()->setParent(b);
-		if(a->getRight()) a->getRight()->setParent(b);
-		if(b->getLeft()) b->getLeft()->setParent(a);
-		if(b->getRight()) b->getRight()->setParent(a);
-
+		K tempKey = a->getKey();
+		D tempData = a->getData();
+		a->setKey(b->getKey());
+		a->setData(b->getData());
+		b->setKey(tempKey);
+		b->setData(tempData);
 	}
 
 	//deletes passed noode and all its children.
@@ -279,9 +259,9 @@ namespace DataStructures{
 		return false;
 	}
 	
-	
-	
 	//inserts new node in its right place
+	//throws OUtOfMemory if there is an allocatiion problem
+	//throws Already Exists if Key exists.0
 	template <class K, class D>
 	void AVLTree<K, D>::insert(const K& key, D data){
 		node<K, D>* new_n = new (std::nothrow) node<K, D>(key, data);
@@ -296,7 +276,8 @@ namespace DataStructures{
 	//recursive algorithm to find and insert a key and data in the correct place
 	template <class K, class D>
 	void AVLTree<K, D>::insert_aux(node<K, D>* n, node<K, D>* in){
-		if(n->getData() >= in->getData()){
+		if(n->getData() == in->getData()) throw AlreadyExists();
+		if(n->getData() > in->getData()){
 			if(n->getLeft()){
 				AVLTree<K,D>::insert_aux(n->getLeft(),in);
 				n->update();
@@ -321,6 +302,7 @@ namespace DataStructures{
 		balance(n);
 	}
 	
+	//Removes node  of given key while maintaining balance of the tree
 	template<class K, class D>
 	void AVLTree<K,D>::remove(const K& key){
 		remove_aux(key, root);
@@ -333,8 +315,9 @@ namespace DataStructures{
 		if(n->getKey() == key){
 			if(n->getKids() == 0){
 				if(n == root) root = nullptr;
-				else if(n->getParent()->getLeft() == n) n->getParent()->setLeft(nullptr);
-				else if(n->getParent()->getRight() == n) n->getParent()->setRight(nullptr);
+				else if(parent->getLeft() == n) parent->setLeft(nullptr);
+				else if(parent->getRight() == n) parent->setRight(nullptr);
+				nodeCount--;
 				delete n;
 			}
 			else if(n->getKids() == 1){
@@ -342,8 +325,9 @@ namespace DataStructures{
 				if(n->getLeft()) son = n->getLeft();
 				else son = n->getRight();
 				if(n == root) root = son;
-				else if(n->getParent()->getLeft() == n) n->getParent()->setLeft(son);
-				else if(n->getParent()->getRight() == n) n->getParent()->setRight(son);
+				else if(parent->getLeft() == n) parent->setLeft(son);
+				else if(parent->getRight() == n) parent->setRight(son);
+				nodeCount--;
 				delete n;
 			}
 			else {
@@ -352,11 +336,11 @@ namespace DataStructures{
 					itr = itr->getLeft();
 				}
 				swapNodes(n, itr);
-				AVLTree<K,D>::remove_aux(key, n);
+				AVLTree<K,D>::remove_aux(key, itr);
 			}
 		}
 		else if(n->getKey() > key) AVLTree<K,D>::remove_aux(key, n->getLeft());
-		AVLTree<K,D>::remove_aux(key, n->getRight());
+		else AVLTree<K,D>::remove_aux(key, n->getRight());
 		balanceAll(parent);
 	}
 	
@@ -385,9 +369,11 @@ namespace DataStructures{
 		}
 	}
 
+	//Balances all nodes in path from son to root
 	template<class K, class D>
 	void AVLTree<K,D>::balanceAll(node<K,D>* son){
 		if(!son) return;
+		son->update();
 		balance(son);
 		balanceAll(son->getParent());
 	}
