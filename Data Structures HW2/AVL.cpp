@@ -29,12 +29,18 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(4,4);
 	printTree(a.getRoot(), nullptr, false);
+	a.insert(4,4);
+	printTree(a.getRoot(), nullptr, false);
 //	a.swapNodes(a.getRoot(), a.getRoot()->getRight()->getLeft());
 //	printTree(a.getRoot(), nullptr, false);
 	a.remove(10);
 	printTree(a.getRoot(), nullptr, false);
+	a.remove(0);
+	printTree(a.getRoot(), nullptr, false);
 	a.remove(37);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(18);
+	a.remove(1);
+	printTree(a.getRoot(), nullptr, false);
+	a.remove(9);
 	printTree(a.getRoot(), nullptr, false);
 }
