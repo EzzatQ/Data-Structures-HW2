@@ -261,7 +261,7 @@ namespace DataStructures{
 	
 	//inserts new node in its right place
 	//throws OUtOfMemory if there is an allocatiion problem
-	//throws Already Exists if Key exists.
+	//throws Already Exists if Key exists.0
 	template <class K, class D>
 	void AVLTree<K, D>::insert(const K& key, D data){
 		node<K, D>* new_n = new (std::nothrow) node<K, D>(key, data);
