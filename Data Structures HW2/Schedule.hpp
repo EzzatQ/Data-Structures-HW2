@@ -18,54 +18,36 @@
 using namespace DataStructures;
 
 class CS_system{
-	LLnode<int> ** freeRooms;
-	LLnode<int> *** roomsAndHours;
+    RH * timeTable;
 	AVLTree<int, course> * courses;
 public:
 	CS_system(int hours, int rooms){
-		if(!(hours > 0 and rooms > 0))
-		{//something
-		}
-		roomsAndHours = new LLnode<int> **[hours];
-		for(int a = 0; a < hours;a++)
-			roomsAndHours[a] = new LLnode<int> * [rooms];
-		freeRooms = new LLnode<int>* [hours];
-		for (int i = 0; i < hours; i++) {
-			int m = 0;
-			freeRooms[i] = new LLnode<int>(m);
-			roomsAndHours[i][0] = freeRooms[i];
-			LLnode<int>* parent = freeRooms[i];
-			parent->setPrev(nullptr);
-			for (int j = 1 ; j < rooms; j++) {
-				LLnode<int>* newNode = new LLnode<int>(j);
-				roomsAndHours[i][j] = newNode;
-				parent->setNext(newNode);
-				newNode->setPrev(parent);
-				parent=newNode;
-			}
-		}
-		courses = new AVLTree<int, course>();
+        timeTable = new RH(hours, rooms);
+        courses = new AVLTree<int, course>();
 	}
 	void AddLecture(int hour, int roomID, int courseID){
-		if(hour < 0 || roomID < 0 || courseID < 0) throw IllegalInitialization() ;
-		if(!roomsAndHours[hour][roomID]){
-			LLnode<int>* prevNode = roomsAndHours[hour][roomID]->getPrev();
-			LLnode<int>* nextNode = roomsAndHours[hour][roomID]->getNext();
-			if(!prevNode) prevNode->setNext(nextNode);
-			if(!nextNode) nextNode->setPrev(prevNode);
-			roomsAndHours[hour][roomID]->setPrev(nullptr);
-			roomsAndHours[hour][roomID]->setNext(nullptr);
-			//delete the node
-		}
-		if(!courses->contains(courseID)){
-			course data = course(courseID);
-			courses->insert(courseID, data);
-		}
+        timeTable->bookLecture(hour, roomID, courseID);
+        //checking if the course exists or not, if does then we:
+        //adding the lecture to the course`s tree by a function
+        //if not we add it then we do the prev step
 	}
-	void GetCourseID(int hour, int roomID, int *courseID){}
-	void DeleteLecture(void *DS, int hour, int roomID){}
-	void ChangeCourseID(int oldCourseID, int newCourseID){}
+	void GetCourseID(int hour, int roomID, int *courseID){
+        *courseID = timeTable->getCourseAt(hour, roomID);
+    }
+	void DeleteLecture(void *DS, int hour, int roomID){
+        timeTable->removeLecture(hour, roomID);
+        //removing from the tree and if its an empty tree then removing the course
+    }
+	void ChangeCourseID(int oldCourseID, int newCourseID){
+        
+    }
 	void CalculateScheduleEfficiency(float *efficiency){}
+    void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){}
+    void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){}
+    ~CS_system(){
+        delete timetable;
+        delete courses;
+    }
 };
 
 #endif /* Schedule_hpp */

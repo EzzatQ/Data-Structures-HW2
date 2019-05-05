@@ -84,7 +84,6 @@
 				52E4EB5D227EFEAD00AD8A0F /* Exceptions.hpp */,
 				52C32D07226626E500AAF835 /* library.h */,
 				52E4EB5A227EFC7D00AD8A0F /* library.cpp */,
-				52C32D08226626E500AAF835 /* main.cpp */,
 				52C32D0A2266276000AAF835 /* AVL.cpp */,
 				52C32D0B2266276000AAF835 /* AVL.hpp */,
 				52E4EB55227EF94C00AD8A0F /* Schedule.hpp */,
@@ -280,6 +279,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N6W2FVLFTJ;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -289,6 +289,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N6W2FVLFTJ;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
