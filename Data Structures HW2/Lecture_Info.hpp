@@ -13,17 +13,38 @@
 namespace DataStructures{
 	class LectureInfo{
 	public:
-		int room;
 		int hour;
-		LectureInfo(int room, int hour): room(room), hour(hour){}
+		int room;
+		LectureInfo(int hour, int room): hour(hour), room(room){}
 		~LectureInfo(){}
-		LectureInfo(LectureInfo& lf);
-		//operator =
-		//operator ==
-		//operator >
-		//operator <
-		//operator >=
-		//operator <=
+		LectureInfo(LectureInfo& li){
+			hour = li.hour;
+			room = li.room;
+		}
+		LectureInfo& operator=(LectureInfo& li){
+			hour = li.hour;
+			room = li.room;
+			return *this;
+		}
+		bool operator==(const LectureInfo& li) const {
+			return hour == li.hour && room == li.room;
+		}
+		bool operator>(const LectureInfo& li) const {
+			if(hour > li.hour) return true;
+			else if(hour < li.hour) return false;
+			else return room > li.room;
+		}
+		bool operator<(const LectureInfo& li) const {
+			if(hour < li.hour) return true;
+			else if(hour > li.hour) return false;
+			else return room < li.room;
+		}
+		bool operator>=(const LectureInfo& li) const {
+			return operator>(li) || operator==(li);
+		}
+		bool operator<=(const LectureInfo& li) const {
+			return operator<(li) || operator==(li);
+		}
 	};
 }
 

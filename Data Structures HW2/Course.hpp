@@ -10,25 +10,37 @@
 #define Course_hpp
 
 #include "AVL.hpp"
+#include "Lecture_Info.hpp"
 
 namespace DataStructures{
+	
 	class course{
-		int courseNum;
-		AVLTree<int, int>* reserved;
+		int courseID;
+		AVLTree<LectureInfo, int>* scheduled;
 	public:
-		course(int number): courseNum(number), reserved(nullptr){
+		course(int number): courseID(number), scheduled(nullptr){
+			scheduled = new (std::nothrow) AVLTree<LectureInfo, int>();
+			if(!scheduled) throw OutOfMemory();
 		}
-		int getCourseID()const{ return courseNum; };
+		int getCourseID()const{ return courseID; }
+		
+		bool operator==(const course& c){
+			return (courseID == c.courseID);
+		}
+		bool operator>(const course& c){
+			return (courseID > c.courseID);
+		}
+		bool operator<(const course& c){
+			return (courseID < c.courseID);
+		}
+		bool operator>=(const course& c){
+			return (courseID >= c.courseID);
+		}
+		bool operator<=(const course& c){
+			return (courseID <= c.courseID);
+		}
+		
 	};
-	bool operator>(const course& a,const course& b){
-		return (a.getCourseID() > b.getCourseID());
-	}
-	bool operator<(const course& a,const course& b){
-		return (a.getCourseID() < b.getCourseID());
-	}
-	bool operator==(const course& a,const course& b){
-		return (a.getCourseID() == b.getCourseID());
-	}
 }
 
 
