@@ -12,39 +12,10 @@
 #include <string>
 #include <exception>
 #include <iostream>
-#include <stdio.h>
 #include <stdbool.h>
+#include "Exceptions.hpp"
 
 namespace DataStructures{
-	
-	class DSException : public std::exception{
-	public:
-		virtual ~DSException() throw() {}
-	};
-	class Null_Arg: public DSException{
-		
-	};
-	
-	class IllegalInitialization : public DSException {
-	public:
-		std::string what(){
-			return "DSError: Illegal initialization values";
-		}
-	};
-	
-	class OutOfMemory : public DSException {
-	public:
-		std::string what(){
-			return "DSError: Out of memory";
-		}
-	};
-	
-	class AlreadyExists : public DSException {
-	public:
-		std::string what(){
-			return "DSError: Key already exists";
-		}
-	};
 	
 	template < class K, class D>
 	class node{
@@ -176,14 +147,13 @@ namespace DataStructures{
 		int nodeCount;
 		
 		void deleteSubTree(node<K,D>* root);
-		bool contains(const K& key);
-		bool contains_aux(K& key, node<K,D>* node);
 		void insert_aux(node<K, D>* n, node<K, D>* in);
 		void remove_aux(const K& key, node<K,D>* n);
 		void balance(node<K, D>* n);
 		void balanceAll(node<K,D>* son);
 		node<K,D>* copyNodes(node<K,D>* head, node<K,D>* parent);
-	public: void swapNodes(node<K, D>* a, node<K, D>* b);
+		node<K,D>* getData_aux(const K& key, node<K,D>* node);
+		void swapNodes(node<K, D>* a, node<K, D>* b);
 		
 	public:
 		AVLTree(): root(nullptr), nodeCount(0){}
@@ -199,6 +169,13 @@ namespace DataStructures{
 		}
         
 		node<K,D>* getRoot(){ return root;}
+		
+		D& getData(const K& key){
+			node<K,D>* n = getData_aux(key, root);
+			return n->getData();
+		}
+		
+		bool contains(const K& key);
 		
 		void insert(const K& key, D data);
 		void remove(const K& key);
@@ -243,20 +220,19 @@ namespace DataStructures{
 			deleteSubTree(root->getRight());
 			delete root;
 		}
-		
 	}
 	
-	//Function looks ifthe key exists in the current tree.
+	//Function looks if the key exists in the current tree.
 	template<class K, class D>
-	bool AVLTree<K,D>::contains(const K& key){ AVLTree<K,D>::contains_aux(key, root);}
+	bool AVLTree<K,D>::contains(const K& key){ return AVLTree<K,D>::getData_aux(key, root);}
 	
 	template<class K, class D>
-	bool AVLTree<K,D>::contains_aux(K& key, node<K,D>* node){
+	node<K,D>* AVLTree<K,D>::getData_aux(const K& key, node<K,D>* node){
 		K node_key = node->getKey();
-		if(key == node_key) return true;
-		if(key < node_key) return contains_aux(key, node->getLeft());
-		if(key > node_key) return contains_aux(key, node->getRight());
-		return false;
+		if(key == node_key) return node;
+		if(key < node_key) return getData_aux(key, node->getLeft());
+		if(key > node_key) return getData_aux(key, node->getRight());
+		return nullptr;
 	}
 	
 	//inserts new node in its right place
