@@ -33,5 +33,4 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.remove(9);
 	printTree(a.getRoot(), nullptr, false);
-	
 }
