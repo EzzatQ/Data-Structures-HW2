@@ -7,6 +7,8 @@
 //
 
 #include "AVL.hpp"
+#include "Course.hpp"
+#include "Lecture_Info.hpp"
 int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
@@ -33,5 +35,5 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.remove(9);
 	printTree(a.getRoot(), nullptr, false);
-	
+	return 0;
 }

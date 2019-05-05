@@ -24,8 +24,7 @@ namespace DataStructures{
 		node* parent;
 		node* left;
 		node* right;
-		int kids;
-		
+		int kids;	
 	public:
 		
 		int BF;
@@ -448,7 +447,6 @@ namespace DataStructures{
 		printTree(root->getRight(), trunk, false);
 	}
 	////////////////////////////////////////////////////////////////////////////////
-	
 	
 }
 

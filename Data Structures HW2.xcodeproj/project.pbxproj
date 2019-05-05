@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		52A8EF34227F140A00B489D2 /* Schedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52A8EF33227F140A00B489D2 /* Schedule.cpp */; };
+		52A8EF35227F177900B489D2 /* Linked_List.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E4EB4B227EF6C800AD8A0F /* Linked_List.cpp */; };
+		52A8EF36227F179500B489D2 /* Lecture_Info.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E4EB58227EFAF400AD8A0F /* Lecture_Info.hpp */; };
+		52A8EF37227F17AA00B489D2 /* Lecture_Info.hpp in Frameworks */ = {isa = PBXBuildFile; fileRef = 52E4EB58227EFAF400AD8A0F /* Lecture_Info.hpp */; };
 		52C32D0C2266276000AAF835 /* AVL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52C32D0A2266276000AAF835 /* AVL.cpp */; };
 		52E4EB5B227EFC7D00AD8A0F /* library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E4EB5A227EFC7D00AD8A0F /* library.cpp */; };
 /* End PBXBuildFile section */
@@ -45,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52A8EF37227F17AA00B489D2 /* Lecture_Info.hpp in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +154,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52A8EF36227F179500B489D2 /* Lecture_Info.hpp in Sources */,
+				52A8EF35227F177900B489D2 /* Linked_List.cpp in Sources */,
 				52A8EF34227F140A00B489D2 /* Schedule.cpp in Sources */,
 				52E4EB5B227EFC7D00AD8A0F /* library.cpp in Sources */,
 				52C32D0C2266276000AAF835 /* AVL.cpp in Sources */,
