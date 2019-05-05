@@ -7,8 +7,6 @@
 //
 
 #include "AVL.hpp"
-#include "Schedule.hpp"
-
 int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
@@ -31,24 +29,9 @@ int main(){
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(4,4);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(5,5);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(28,28);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(105,105);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(90,90);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(7,7);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(10);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(0);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(37);
-	printTree(a.getRoot(), nullptr, false);
 	a.remove(1);
 	printTree(a.getRoot(), nullptr, false);
 	a.remove(9);
 	printTree(a.getRoot(), nullptr, false);
+	
 }
