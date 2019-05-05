@@ -11,14 +11,25 @@
 
 #include <stdio.h>
 #include "AVL.hpp"
-using namespace DataStructures;
-class course{
-    int courseNum;
-    AVLTree<int, int> reserved;
-public:
-    course(int number): courseNum(number){
-        //initializing the tree
+namespace DataStructures{
+    class course{
+        int courseNum;
+        AVLTree<int, int>* reserved;
+    public:
+        course(int number): courseNum(number){
+            
+        }
+        int getCourseID()const{ return courseNum; };
     };
-};
+    bool operator>(const course& a,const course& b){
+        return (a.getCourseID() > b.getCourseID());
+    }
+    bool operator<(const course& a,const course& b){
+        return (a.getCourseID() < b.getCourseID());
+    }
+    bool operator==(const course& a,const course& b){
+        return (a.getCourseID() == b.getCourseID());
+    }
+}
 #endif /* courseData_hpp */
 

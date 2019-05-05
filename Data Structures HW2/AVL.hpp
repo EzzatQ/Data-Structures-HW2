@@ -176,13 +176,14 @@ namespace DataStructures{
 		int nodeCount;
 		
 		void deleteSubTree(node<K,D>* root);
-		bool contains(const K& key);
+        bool contains(const K& key);
 		bool contains_aux(K& key, node<K,D>* node);
 		void insert_aux(node<K, D>* n, node<K, D>* in);
 		void remove_aux(const K& key, node<K,D>* n);
 		void balance(node<K, D>* n);
 		void balanceAll(node<K,D>* son);
 		node<K,D>* copyNodes(node<K,D>* head, node<K,D>* parent);
+        node<K, D>* find_aux(const K& key, node<K,D>* node);
 	public: void swapNodes(node<K, D>* a, node<K, D>* b);
 		
 	public:
@@ -199,12 +200,12 @@ namespace DataStructures{
 		}
         
 		node<K,D>* getRoot(){ return root;}
-		
+        node<K,D>* find(const K& key);
 		void insert(const K& key, D data);
 		void remove(const K& key);
-		
 		void rotateLeft(node<K,D>* node);
 		void rotateRight(node<K,D>* node);
+        
 	};
 	
 	template<class K, class D>
@@ -250,6 +251,19 @@ namespace DataStructures{
 	template<class K, class D>
 	bool AVLTree<K,D>::contains(const K& key){ AVLTree<K,D>::contains_aux(key, root);}
 	
+    template<class K, class D>
+    node<K, D>* AVLTree<K,D>::find_aux(const K& key, node<K,D>* node){
+        K node_key = node->getKey();
+        if(key == node_key) return node;
+        if(key < node_key) return find_aux(key, node->getLeft());
+        if(key > node_key) return find_aux(key, node->getRight());
+        return nullptr;
+    }
+    template<class K, class D>
+    node<K,D>* AVLTree<K,D>::find(const K& key){
+        return AVLTree<K,D>::find_aux(key, root);
+    }
+    
 	template<class K, class D>
 	bool AVLTree<K,D>::contains_aux(K& key, node<K,D>* node){
 		K node_key = node->getKey();

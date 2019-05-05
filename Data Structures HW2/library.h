@@ -49,5 +49,4 @@ void Quit(void** DS);
 #ifdef __cplusplus
 }
 #endif
-
 #endif    /*_234218_WET1 */
