@@ -9,6 +9,7 @@
 #include "AVL.hpp"
 #include "Course.hpp"
 #include "Lecture_Info.hpp"
+#include "Schedule.hpp"
 int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;

@@ -22,8 +22,13 @@ namespace DataStructures{
 			scheduled = new (std::nothrow) AVLTree<LectureInfo, int>();
 			if(!scheduled) throw OutOfMemory();
 		}
+        course(course& newCourse){
+            courseID = newCourse.getCourseID();
+            scheduled = newCourse.getScheduled();
+        }
 		int getCourseID()const{ return courseID; }
-		
+        void setCourseID(int newID){courseID = newID; }
+        AVLTree<LectureInfo, int>* getScheduled()const{ return scheduled; }
 		bool operator==(const course& c){
 			return (courseID == c.courseID);
 		}
