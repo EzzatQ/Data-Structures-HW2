@@ -2,7 +2,7 @@
 //  Schedule.hpp
 //  Data Structures HW2
 //
-//  Created by Ezzat Qupty on 05/05/2019.
+//  Created by Ezzat Qupty on 05/05/2019.*
 //  Copyright © 2019 Ezzat Qupty. All rights reserved.
 //
 
@@ -39,13 +39,20 @@ public:
         //removing from the tree and if its an empty tree then removing the course
     }
 	void ChangeCourseID(int oldCourseID, int newCourseID){
+        try{
+            course currNode = courses->getData(newCourseID);
+        
+        }catch(DoesNotExist a){
+            //course newData = new course(courses->getData(oldCourseID));
+            
+        }
         
     }
 	void CalculateScheduleEfficiency(float *efficiency){}
     void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){}
     void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){}
     ~CS_system(){
-        delete timetable;
+        delete timeTable;
         delete courses;
     }
 };

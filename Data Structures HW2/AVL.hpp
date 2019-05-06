@@ -171,6 +171,7 @@ namespace DataStructures{
 		
 		D& getData(const K& key){
 			node<K,D>* n = getData_aux(key, root);
+            if(!n) throw DoesNotExist();
 			return n->getData();
 		}
 		
