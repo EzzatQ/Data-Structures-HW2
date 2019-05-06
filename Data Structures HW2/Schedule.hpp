@@ -40,14 +40,56 @@ public:
     }
 	void ChangeCourseID(int oldCourseID, int newCourseID){
         try{
-            course currNode = courses->getData(newCourseID);
-        
+            AVLTree<DataStructures::LectureInfo, int>* currTree = courses->getData(newCourseID).getScheduled();
+            AVLTree<DataStructures::LectureInfo, int>* prevTree = courses->getData(oldCourseID).getScheduled();
+            int m = currTree->getNodeCount();
+            int n = prevTree->getNodeCount();
+            node<DataStructures::LectureInfo, int> ** array1 = new node<DataStructures::LectureInfo, int> *[m];
+            node<DataStructures::LectureInfo, int> ** array2 = new node<DataStructures::LectureInfo, int> *[n];
+            node<DataStructures::LectureInfo, int> ** array3 = new node<DataStructures::LectureInfo, int> *[m+n];
+            currTree->fillAnArray(array1);
+            prevTree->fillAnArray(array2);
+            node<DataStructures::LectureInfo, int> ** p1 = array1;
+            node<DataStructures::LectureInfo, int> ** p2 = array2;
+            for(int i=0; i < m+n; i++){
+                if((*p1)->getKey()<(*p2)->getKey()){
+                    array3[i] = *p1;
+                    p1++;
+                }else{
+                    array3[i] = *p2;
+                    p2++;
+                }
+            }
+            delete[] array1;
+            delete[] array2;
+            AVLTree<DataStructures::LectureInfo, int>* newTree = treeFill(array3, m+n);
+            courses->remove(oldCourseID);
+            courses->getData(newCourseID).setScheduled(newTree);
         }catch(DoesNotExist a){
-            //course newData = new course(courses->getData(oldCourseID));
-            
+            course* newData = new course(courses->getData(oldCourseID));
+            newData->setCourseID(newCourseID);
+            courses->insert(newCourseID, *newData);
+            courses->remove(oldCourseID);
         }
-        
     }
+    ///////////////// filling a tree should be moved i think
+    void treeFill_aux(node<DataStructures::LectureInfo, int> * root,node<DataStructures::LectureInfo, int> ** array,int start,int finish){
+        int middle = (finish - start)/2;
+        if(middle-start!=0){
+            root->setLeft(array[start+(middle-start)/2]);
+            treeFill_aux(root->getLeft(),array,start,middle);
+        }
+        if(finish-middle!=0){
+            root->setRight(array[middle+(finish-middle)/2]);
+            treeFill_aux(root->getRight(),array,middle,finish);
+        }
+    }
+    AVLTree<DataStructures::LectureInfo, int>* treeFill(node<DataStructures::LectureInfo, int> ** array, int m){
+        node<DataStructures::LectureInfo, int> *root = array[m/2];
+        treeFill_aux(root, array, 0, m-1);
+        return new AVLTree<DataStructures::LectureInfo, int>(root,m);
+    }
+    ////////////
 	void CalculateScheduleEfficiency(float *efficiency){}
     void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){}
     void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){}
