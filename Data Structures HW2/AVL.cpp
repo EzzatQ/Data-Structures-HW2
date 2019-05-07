@@ -14,26 +14,33 @@ int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
 	AVLTree<int, int> a;
-	a.insert(13,13);
-	printTree(a.getRoot(), nullptr, false);
 	a.insert(8,8);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(15,15);
+	a.insert(3,3);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(4,4);
+	a.insert(5,5);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(18,18);
+	a.insert(2,2);
+    a.insert(13,13);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(4);
+    std::cout << "------------------------------------------------------\n";
+	a.insert(11,11);
+    printTree(a.getRoot(), nullptr, false);
+    a.insert(20,20);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(13);
+    std::cout << "------------------------------------------------------\n";
+    ////
+	a.remove(3);
 	printTree(a.getRoot(), nullptr, false);
-	a.remove(18);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(8);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(15);
-	printTree(a.getRoot(), nullptr, false);
-
+    std::cout << "------------------------------------------------------\n";
+    a.remove(5);
+    printTree(a.getRoot(), nullptr, false);
+    std::cout << "------------------------------------------------------\n";
+//    a.remove(9);
+//    printTree(a.getRoot(), nullptr, false);
+//    std::cout << "------------------------------------------------------\n";
+//    a.remove(4);
+//    printTree(a.getRoot(), nullptr, false);
+    std::cout << "------------------------------------------------------\n";
 	return 0;
 }

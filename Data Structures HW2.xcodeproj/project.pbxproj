@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5271A0CA2280683000AE2FAE /* AVL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52C32D0A2266276000AAF835 /* AVL.cpp */; };
+		1E0450102282518C003F36C9 /* tree_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5271A0C822804F9200AE2FAE /* tree_test.cpp */; };
 		52A8EF34227F140A00B489D2 /* Schedule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52A8EF33227F140A00B489D2 /* Schedule.cpp */; };
 		52A8EF35227F177900B489D2 /* Linked_List.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E4EB4B227EF6C800AD8A0F /* Linked_List.cpp */; };
 		52A8EF36227F179500B489D2 /* Lecture_Info.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E4EB58227EFAF400AD8A0F /* Lecture_Info.hpp */; };
@@ -154,7 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5271A0CA2280683000AE2FAE /* AVL.cpp in Sources */,
+				1E0450102282518C003F36C9 /* tree_test.cpp in Sources */,
 				52A8EF36227F179500B489D2 /* Lecture_Info.hpp in Sources */,
 				52A8EF35227F177900B489D2 /* Linked_List.cpp in Sources */,
 				52A8EF34227F140A00B489D2 /* Schedule.cpp in Sources */,
@@ -280,7 +280,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JJBXCYA32Y;
+				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -290,7 +290,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = JJBXCYA32Y;
+				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

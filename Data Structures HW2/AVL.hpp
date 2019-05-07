@@ -343,6 +343,7 @@ namespace DataStructures{
 				if(n == root) root = son;
 				else if(parent->getLeft() == n) parent->setLeft(son);
 				else if(parent->getRight() == n) parent->setRight(son);
+                son->setParent(parent);
 				nodeCount--;
 				delete n;
 				balanceAll(parent);
@@ -402,6 +403,7 @@ namespace DataStructures{
 		node<K, D>* pivRight = pivot ? pivot->getRight() : nullptr;
 		node<K,D>* nParent = n->getParent();
 		n->setLeft(pivRight);
+        if(pivRight)pivRight->setParent(n);
 		pivot->setRight(n);
 		if(n == root) root = pivot;
 		else if(nParent->getLeft() == n) nParent->setLeft(pivot);
@@ -421,6 +423,7 @@ namespace DataStructures{
 		node<K,D>* pivLeft = pivot ? pivot->getLeft() : nullptr;
 		node<K,D>* nParent = n->getParent();
 		n->setRight(pivLeft);
+        if(pivLeft)pivLeft->setParent(n);
 		pivot->setLeft(n);
 		if(n == root) root = pivot;
 		else if(nParent->getLeft() == n) nParent->setLeft(pivot);
