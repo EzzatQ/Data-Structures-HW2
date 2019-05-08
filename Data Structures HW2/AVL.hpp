@@ -19,19 +19,26 @@ namespace DataStructures{
 	
 	template < class K, class D>
 	class node{
-		K key;
-		D data;
+		K* key;
+		D* data;
 		node* parent;
 		node* left;
 		node* right;
-		int kids;	
+		int kids;
+		
 	public:
 		
 		int BF;
 		int height;
 		
-		node(const K& key, D& data): key(key), data(data), parent(nullptr), left(nullptr), right(nullptr), kids(0), BF(0), height(0){}
+		node(const K& key, D& data): key(nullptr), data(nullptr), parent(nullptr), left(nullptr), right(nullptr), kids(0), BF(0), height(0){
+			try{
+				this->key = new (std::nothrow) K(key);
+				this->data = new (std::nothrow) D(data);
+			} catch (std::bad_alloc e){ throw OutOfMemory();}
+		}
 		
+
         node(node& n):key(n.key){
             this->data = n.data;
             this->parent = n.parent;
@@ -40,16 +47,41 @@ namespace DataStructures{
             this->kids = n.kids;
             this->BF = n.BF;
             //this->height = n.heigh;
+            //Ezzat should resolve this
+//            try{
+//                this->key = new (std::nothrow) K(key);
+//                this->data = new (std::nothrow) D(data);
+//            } catch (std::bad_alloc e){ throw OutOfMemory();}
+//            this->parent = n->parent;
+//            this->left = n->left;
+//            this->right = n->right;
+//            this->kids = n->kids;
+//            this->BF = n->BF;
+//            this->height = n->heigh;
+
 		}
 		node& operator=(const node& n){
+			if(*this == n) return &this;
+			if(this->key) delete this->key;
+			if(this->data) delete this->data;
 			this(n);
 			return &this;
 		}
+
+		~node(){
+			delete key;
+			delete data;
+		}
 		
-		~node(){}
-		K& getKey() { return key;}
-		D& getData() { return data;}
-		int getKids() {return kids;}
+		bool operator==(node* n){
+			return n->key == key && n->data == data && n->left == left && n->right == right && n->parent == parent;
+		}
+		
+		K& getKey() { return *key;}
+		D& getData() { return *data;}
+		D* getDataPtr(){return data;}
+		K* getKeyPtr(){return key;}
+		int getKids() { return kids;}
 		int getBF() { update(); return BF;}
 		int getHeight() { update(); return height;}
 		
@@ -57,22 +89,32 @@ namespace DataStructures{
 		node* getRight(){ return right;}
 		node* getParent(){ return parent;}
 		
+		void setDataPtr(D* data){this->data = data;}
+		void setKeyPtr(K* key){this->key = key;}
 		void setKey(K& key){
-			this->key = key;
+			if(this->key){
+				delete this->key;
+			}
+			try{
+				this->key = new (std::nothrow) K(key);
+			} catch (std::bad_alloc e){ throw OutOfMemory();}
 		}
 		
 		void setData(D& data){
-			this->data = data;
+			if(this->data){
+				delete this->data;
+			}
+			try{
+				this->data = new (std::nothrow) D(data);
+			} catch (std::bad_alloc e){ throw OutOfMemory();}
 		}
 		
 		void setLeft(node* n){
 			if(!n && !left){
-				return;
 			}
 			if(!n && left){
 				left = nullptr;
 				kids--;
-				return;
 			}
 			if(n && !left){
 				left = n;
@@ -80,27 +122,23 @@ namespace DataStructures{
 			}
 			if(n && left){
 				left = n;
-				return;
 			}
 			update();
 		}
 		
 		void setRight(node* n){
 			if(!n && !right){
-				return;
 			}
-			if(!n && right){
+			else if(!n && right){
 				right = nullptr;
 				kids--;
-				return;
 			}
-			if(n && !right){
+			else if(n && !right){
 				right = n;
 				kids++;
 			}
-			if(n && right){
+			else {
 				right = n;
-				return;
 			}
 			update();
 		}
@@ -132,7 +170,7 @@ namespace DataStructures{
 			int lheight = left ? left->height : 0;
 			int rheight = right ? right->height : 0;
 			height = lheight > rheight ? lheight : rheight;
-			height++; ///???
+			height++;
 			BF = lheight - rheight;
 		}
 		
@@ -165,6 +203,7 @@ namespace DataStructures{
 		}
 		
 		AVLTree& operator=(const AVLTree& avl){
+			if(*this == avl) return &this;
 			this(avl);
 			return &this;
 		}
@@ -176,7 +215,9 @@ namespace DataStructures{
             if(!n) throw DoesNotExist();
 			return n->getData();
 		}
+
         int getNodeCount(){return nodeCount;}
+
 		bool contains(const K& key);
         void fillAnArray(node<K, D>** array);
 		void insert(const K& key, D data);
@@ -184,6 +225,13 @@ namespace DataStructures{
 		
 		void rotateLeft(node<K,D>* node);
 		void rotateRight(node<K,D>* node);
+		
+		bool isBalanced(){return isBalanced_aux(root);}
+		bool isBalanced_aux(node<K,D>* n){
+			if(!n) return true;
+			if(n->getBF() < -1 || n->getBF() > 1) return false;
+			else return isBalanced_aux(n->getLeft()) && isBalanced_aux(n->getRight());
+		}
 	};
 	
 	template<class K, class D>
@@ -225,12 +273,12 @@ namespace DataStructures{
 	//Swaps location of two given nodes (this is used for a special case in the remove function)
 	template<class K, class D>
 	void AVLTree<K,D>::swapNodes(node<K,D>* a, node<K,D>* b){
-		K tempKey = a->getKey();
-		D tempData = a->getData();
-		a->setKey(b->getKey());
-		a->setData(b->getData());
-		b->setKey(tempKey);
-		b->setData(tempData);
+		K* tempKey = a->getKeyPtr();
+		D* tempData = a->getDataPtr();
+		a->setKeyPtr(b->getKeyPtr());
+		a->setDataPtr(b->getDataPtr());
+		b->setKeyPtr(tempKey);
+		b->setDataPtr(tempData);
 	}
 
 	//deletes passed noode and all its children.
@@ -249,6 +297,7 @@ namespace DataStructures{
 	
 	template<class K, class D>
 	node<K,D>* AVLTree<K,D>::getData_aux(const K& key, node<K,D>* node){
+		if(!node) return nullptr;
 		K node_key = node->getKey();
 		if(key == node_key) return node;
 		if(key < node_key) return getData_aux(key, node->getLeft());
@@ -316,6 +365,8 @@ namespace DataStructures{
 				else if(parent->getRight() == n) parent->setRight(nullptr);
 				nodeCount--;
 				delete n;
+				balanceAll(parent);
+				return;
 			}
 			else if(n->getKids() == 1){
 				node<K,D>* son = nullptr;
@@ -324,8 +375,11 @@ namespace DataStructures{
 				if(n == root) root = son;
 				else if(parent->getLeft() == n) parent->setLeft(son);
 				else if(parent->getRight() == n) parent->setRight(son);
+                son->setParent(parent);
 				nodeCount--;
 				delete n;
+				balanceAll(parent);
+				return;
 			}
 			else {
 				node<K,D>* itr = n->getRight();
@@ -338,7 +392,6 @@ namespace DataStructures{
 		}
 		else if(n->getKey() > key) AVLTree<K,D>::remove_aux(key, n->getLeft());
 		else AVLTree<K,D>::remove_aux(key, n->getRight());
-		balanceAll(parent);
 	}
 	
 	//Depending on whoich situation the tree is in, performs needed rotations to
@@ -382,6 +435,7 @@ namespace DataStructures{
 		node<K, D>* pivRight = pivot ? pivot->getRight() : nullptr;
 		node<K,D>* nParent = n->getParent();
 		n->setLeft(pivRight);
+        if(pivRight)pivRight->setParent(n);
 		pivot->setRight(n);
 		if(n == root) root = pivot;
 		else if(nParent->getLeft() == n) nParent->setLeft(pivot);
@@ -401,6 +455,7 @@ namespace DataStructures{
 		node<K,D>* pivLeft = pivot ? pivot->getLeft() : nullptr;
 		node<K,D>* nParent = n->getParent();
 		n->setRight(pivLeft);
+        if(pivLeft)pivLeft->setParent(n);
 		pivot->setLeft(n);
 		if(n == root) root = pivot;
 		else if(nParent->getLeft() == n) nParent->setLeft(pivot);

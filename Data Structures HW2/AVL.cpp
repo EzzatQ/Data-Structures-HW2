@@ -14,28 +14,24 @@ int main(){
 	using DataStructures::AVLTree;
 	using DataStructures::printTree;
 	AVLTree<int, int> a;
-	a.insert(10,10);
+	a.insert(8,8);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(9,9);
+	a.insert(3,3);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(0,0);
+	a.insert(5,5);
 	printTree(a.getRoot(), nullptr, false);
 	a.insert(2,2);
+    a.insert(13,13);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(37, 37);
+    std::cout << "------------------------------------------------------\n";
+	a.insert(11,11);
+    printTree(a.getRoot(), nullptr, false);
+    a.insert(20,20);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(18,18);
+    std::cout << "------------------------------------------------------\n";
+    ////
+	a.remove(3);
 	printTree(a.getRoot(), nullptr, false);
-	a.insert(1,1);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(39,39);
-	printTree(a.getRoot(), nullptr, false);
-	a.insert(4,4);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(1);
-	printTree(a.getRoot(), nullptr, false);
-	a.remove(9);
-	printTree(a.getRoot(), nullptr, false);
-    ////////////
+
 	return 0;
 }
