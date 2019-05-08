@@ -114,6 +114,20 @@ namespace DataStructures{
                 current->getData().setBooked(false);
             }else throw DoesNotExist();
         }
+        void getFreeRoomsAtHour(int hour, int **rooms, int* numOfRooms){
+            *numOfRooms = 0;
+            LLnode<roomBook> * itr = *freeRooms[hour];
+            while(itr){
+                (*numOfRooms)++;
+                itr = itr->getNext();
+            }
+            rooms = new int*[*numOfRooms];
+            itr = *freeRooms[hour];
+            for(int i=0; i < (*numOfRooms);i++){
+                rooms[i] = new int(itr->getData().getId());
+                itr = itr->getNext();
+            }
+        }
         ~RH(){
             for (int i = 0; i < hours; i++) {
                 LLnode<roomBook>* current = freeRooms[i];

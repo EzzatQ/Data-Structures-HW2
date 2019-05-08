@@ -27,17 +27,27 @@ public:
 	}
 	void AddLecture(int hour, int roomID, int courseID){
         timeTable->bookLecture(hour, roomID, courseID);
-        //checking if the course exists or not, if does then we:
-        //adding the lecture to the course`s tree by a function
-        //if not we add it then we do the prev step
+        course a = courses->getData(courseID);
+        if(a) a.addLecture(hour, roomID);
+        else{
+            courses->insert(courseID, course(courseID));
+            course b = courses->getData(courseID);
+            b.addLecture(hour, roomID);
+        }
 	}
 	void GetCourseID(int hour, int roomID, int *courseID){
         *courseID = timeTable->getCourseAt(hour, roomID);
     }
 	void DeleteLecture(void *DS, int hour, int roomID){
+        //check for exceptions, and if this even works
+        int *courseID = new int(0);
+        GetCourseID(hour, roomIF, courseID);
         timeTable->removeLecture(hour, roomID);
-        //removing from the tree and if its an empty tree then removing the course
+        courses->getData(*courseID).removeLecture(hour, roomID);
     }
+    
+    
+    
 	void ChangeCourseID(int oldCourseID, int newCourseID){
         try{
             AVLTree<DataStructures::LectureInfo, int>* currTree = courses->getData(newCourseID).getScheduled();
@@ -89,10 +99,18 @@ public:
         treeFill_aux(root, array, 0, m-1);
         return new AVLTree<DataStructures::LectureInfo, int>(root,m);
     }
-    ////////////
-	void CalculateScheduleEfficiency(float *efficiency){}
-    void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){}
-    void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){}
+    ///////////////////////
+    
+	void CalculateScheduleEfficiency(float *efficiency){
+        
+    }
+    void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){
+        //check for exceptions
+        timeTable->getFreeRoomsAtHour(hour, rooms, numOfRooms);
+    }
+    void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){
+        
+    }
     ~CS_system(){
         delete timeTable;
         delete courses;

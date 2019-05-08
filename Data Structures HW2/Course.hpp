@@ -26,6 +26,14 @@ namespace DataStructures{
             courseID = newCourse.getCourseID();
             scheduled = new AVLTree<LectureInfo, int>(*newCourse.getScheduled());
         }
+        void addLecture(int hour, int room){
+            //should check if already exists
+            scheduled->insert(LectureInfo(hour,room),courseID);
+        }
+        void removeLecture(int hour, int room){
+            // should check if it throws and exception
+            scheduled->remove(LectureInfo(hour,room));
+        }
 		int getCourseID()const{ return courseID; }
         void setCourseID(int newID){courseID = newID; }
         AVLTree<LectureInfo, int>* getScheduled()const{ return scheduled; }
