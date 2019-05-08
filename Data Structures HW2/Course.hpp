@@ -24,11 +24,16 @@ namespace DataStructures{
 		}
         course(course& newCourse){
             courseID = newCourse.getCourseID();
-            scheduled = newCourse.getScheduled();
+            scheduled = new AVLTree<LectureInfo, int>(*newCourse.getScheduled());
         }
 		int getCourseID()const{ return courseID; }
         void setCourseID(int newID){courseID = newID; }
         AVLTree<LectureInfo, int>* getScheduled()const{ return scheduled; }
+        void setScheduled(AVLTree<LectureInfo, int>* newSchedule){
+            delete scheduled;
+            //scheduled = new  AVLTree<LectureInfo, int>(*newSchedule);
+            scheduled = newSchedule;
+        }
 		bool operator==(const course& c){
 			return (courseID == c.courseID);
 		}
@@ -44,7 +49,7 @@ namespace DataStructures{
 		bool operator<=(const course& c){
 			return (courseID <= c.courseID);
 		}
-		
+        ~course(){delete scheduled;}
 	};
 	
 }

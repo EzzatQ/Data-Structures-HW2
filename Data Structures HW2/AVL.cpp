@@ -33,16 +33,5 @@ int main(){
 	a.remove(3);
 	printTree(a.getRoot(), nullptr, false);
 
-    std::cout << "------------------------------------------------------\n";
-    a.remove(5);
-    printTree(a.getRoot(), nullptr, false);
-    std::cout << "------------------------------------------------------\n";
-//    a.remove(9);
-//    printTree(a.getRoot(), nullptr, false);
-//    std::cout << "------------------------------------------------------\n";
-//    a.remove(4);
-//    printTree(a.getRoot(), nullptr, false);
-    std::cout << "------------------------------------------------------\n";
-
 	return 0;
 }

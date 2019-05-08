@@ -38,17 +38,27 @@ namespace DataStructures{
 			} catch (std::bad_alloc e){ throw OutOfMemory();}
 		}
 		
-		node(node& n){
-			try{
-				this->key = new (std::nothrow) K(key);
-				this->data = new (std::nothrow) D(data);
-			} catch (std::bad_alloc e){ throw OutOfMemory();}
-			this->parent = n->parent;
-			this->left = n->left;
-			this->right = n->right;
-			this->kids = n->kids;
-			this->BF = n->BF;
-			this->height = n->heigh;
+
+        node(node& n):key(n.key){
+            this->data = n.data;
+            this->parent = n.parent;
+            this->left = n.left;
+            this->right = n.right;
+            this->kids = n.kids;
+            this->BF = n.BF;
+            //this->height = n.heigh;
+            //Ezzat should resolve this
+//            try{
+//                this->key = new (std::nothrow) K(key);
+//                this->data = new (std::nothrow) D(data);
+//            } catch (std::bad_alloc e){ throw OutOfMemory();}
+//            this->parent = n->parent;
+//            this->left = n->left;
+//            this->right = n->right;
+//            this->kids = n->kids;
+//            this->BF = n->BF;
+//            this->height = n->heigh;
+
 		}
 		node& operator=(const node& n){
 			if(*this == n) return &this;
@@ -183,10 +193,13 @@ namespace DataStructures{
 		
 	public:
 		AVLTree(): root(nullptr), nodeCount(0){}
+        AVLTree(node<K, D>* newRoot, int nodeCount):root(nullptr), nodeCount(nodeCount){
+            copyNodes(newRoot, root); //if it works this way
+        }
 		~AVLTree();
 		AVLTree(AVLTree& avl){
-			this->head = copyNodes(avl->head, nullptr);
-			nodeCount = avl->nodeCount;
+			//this->head = copyNodes(avl->head, nullptr);
+			//nodeCount = avl->nodeCount;
 		}
 		
 		AVLTree& operator=(const AVLTree& avl){
@@ -202,11 +215,11 @@ namespace DataStructures{
             if(!n) throw DoesNotExist();
 			return n->getData();
 		}
-		
-		int getNodeCount(){ return nodeCount;}
-		
+
+        int getNodeCount(){return nodeCount;}
+
 		bool contains(const K& key);
-		
+        void fillAnArray(node<K, D>** array);
 		void insert(const K& key, D data);
 		void remove(const K& key);
 		
@@ -225,7 +238,26 @@ namespace DataStructures{
 	AVLTree<K,D>::~AVLTree(){
 		if(root) deleteSubTree(root);
 	}
-	
+    template<class K, class D>
+    void fillAnArray_aux(node<K, D>** array,node<K, D>* curr,int* i){
+        if(!curr) return;
+        if(!curr->getLeft()){
+            array[*i] = new node<K, D>(*curr);
+          ++(*i);
+            if(curr->getRight())  fillAnArray_aux(array, curr->getRight(), i);
+            return;
+        }
+        fillAnArray_aux(array, curr->getLeft(), i);
+        array[*i] = new node<K, D>(*curr);
+        ++(*i);
+        fillAnArray_aux(array, curr->getRight(), i);
+    }
+	template<class K, class D>
+    void AVLTree<K,D>::fillAnArray(node<K, D>** array){
+        int * a= new int(0);
+        fillAnArray_aux(array, this->root, a);
+    }
+    
 	//Copies all subtree of given head (parent pointer is for setting the heads parent node)
 	template<class K, class D>
 	node<K,D>* AVLTree<K,D>::copyNodes(node<K,D>* head, node<K,D>* parent){
@@ -435,6 +467,11 @@ namespace DataStructures{
 		n->update();
 		pivot->update();
 	}
+    
+    template<class K, class D>
+    AVLTree<K, D> * combine(AVLTree<K, D> * first,AVLTree<K, D> * second){
+        
+    }
 	
 	
 	/////////////////////////PRINTING FUNCTION AND AUX//////////////////////////////

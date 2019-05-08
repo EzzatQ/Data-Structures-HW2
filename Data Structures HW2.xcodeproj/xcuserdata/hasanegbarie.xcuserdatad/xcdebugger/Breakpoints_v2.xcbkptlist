@@ -10,15 +10,25 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Data Structures HW2/AVL.cpp"
+<<<<<<< HEAD
+            timestampString = "578871072.964367"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+=======
             timestampString = "578965902.310581"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "33"
             endingLineNumber = "33"
+>>>>>>> master
             landmarkName = "main()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
+<<<<<<< HEAD
+=======
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
@@ -483,5 +493,6 @@
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
+>>>>>>> master
    </Breakpoints>
 </Bucket>
