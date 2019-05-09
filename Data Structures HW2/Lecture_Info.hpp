@@ -17,7 +17,7 @@ namespace DataStructures{
 		int room;
 		LectureInfo(int hour, int room): hour(hour), room(room){}
 		~LectureInfo(){}
-		LectureInfo(LectureInfo& li){
+		LectureInfo(const LectureInfo& li){
 			hour = li.hour;
 			room = li.room;
 		}
@@ -26,6 +26,8 @@ namespace DataStructures{
 			room = li.room;
 			return *this;
 		}
+        int getHour(){return hour;}
+        int getRoom(){return room;}
 		bool operator==(const LectureInfo& li) const {
 			return hour == li.hour && room == li.room;
 		}

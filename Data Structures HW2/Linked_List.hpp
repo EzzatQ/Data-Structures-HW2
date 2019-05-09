@@ -15,19 +15,23 @@ namespace DataStructures{
 	
 	template<class D>
 	class LLnode{
-		D& data;
+		D* data;
 		LLnode* prev;
 		LLnode* next;
 	public:
-		LLnode(D& d): data(d), prev(nullptr), next(nullptr){}
-		~LLnode();
-		LLnode(LLnode& n);
+		LLnode(D& d): prev(nullptr), next(nullptr){
+            data = new D(d);
+        }
+        ~LLnode(){
+            delete data;
+        }
+        LLnode(LLnode& n){};
 		LLnode& operator=(LLnode& n);
 		void setPrev(LLnode* p){ prev = p; }
 		void setNext(LLnode* n){ next = n; }
 		LLnode* getPrev(){ return prev;  }
 		LLnode* getNext(){ return next; }
-        D& getData(){ return data; }
+        D* getData(){ return data; }
 	};
     
     //////////////////////////////////////////////////////////////////////
@@ -48,8 +52,11 @@ namespace DataStructures{
     
     
     class RH{
+        int lectures;
         int hours;
         int rooms;
+        int* hoursCount;
+        int* roomsCount;
         LLnode<roomBook> ** freeRooms;
         LLnode<roomBook> *** roomsAndHours;
     public:
@@ -57,10 +64,21 @@ namespace DataStructures{
             if(!(hours > 0 and rooms > 0))
             {//something
             }
-            roomsAndHours = new LLnode<roomBook> **[hours];
+            lectures = 0;
+            hoursCount = new int[hours+1];
+            roomsCount = new int[rooms+1];
+            for (int i = 0; i < hours+1; i++) {
+                hoursCount[i] = 0;
+            }
+            for (int j = 0; j < hours+1; j++) {
+                roomsCount[j] = 0;
+            }
             
+            roomsAndHours = new LLnode<roomBook> **[hours];
             for(int a = 0; a < hours;a++)
                 roomsAndHours[a] = new LLnode<roomBook> * [rooms];
+            
+            
             freeRooms = new LLnode<roomBook>* [hours];
             // dont remember if i should do new...
             roomBook first =  roomBook(0);
@@ -77,54 +95,78 @@ namespace DataStructures{
                     newNode->setPrev(parent);
                     parent=newNode;
                 }
+                parent->setNext(nullptr);
             }
         }
         int getHours(){ return hours; }
         int getRooms(){ return rooms; }
         bool isBooked(int hour, int room){
-            return roomsAndHours[hour][room]->getData().getBooked();
+            return roomsAndHours[hour][room]->getData()->getBooked();
             
         }
         int getCourseAt(int hour, int room){
+            if(hour < 0 || hour > hours-1 || room < 0 || room > rooms-1) throw IllegalInitialization();
             if(isBooked(hour, room))
-                return roomsAndHours[hour][room]->getData().getId();
+                return roomsAndHours[hour][room]->getData()->getId();
             else return -1;
         }
+        float getEfficiency(){
+                if(lectures>0)
+                    return (float)lectures/(float)(hoursCount[hours]*roomsCount[rooms]);
+                           return -1;
+               }
         void bookLecture(int hour, int room, int courseId){
-            if(!roomsAndHours[hour][room]->getData().getBooked()){
+            if(hour > hours-1 || room > rooms -1) throw IllegalInitialization();
+            if(!roomsAndHours[hour][room]->getData()->getBooked()){
+                lectures++;
+                hoursCount[hour]++;
+                roomsCount[room]++;
+                if(hoursCount[hour]==1) hoursCount[hours]++;
+                if(roomsCount[room]==1) roomsCount[rooms]++;
                 LLnode<roomBook>* current = roomsAndHours[hour][room];
                 LLnode<roomBook>* prevNode = current->getPrev();
                 LLnode<roomBook>* nextNode = current->getNext();
-                if(!prevNode) prevNode->setNext(nextNode);
-                if(!nextNode) nextNode->setPrev(prevNode);
+                if(prevNode) prevNode->setNext(nextNode);
+                else{
+                    freeRooms[hour] = nextNode;
+                }
+                if(nextNode) nextNode->setPrev(prevNode);
                 current->setPrev(nullptr);
                 current->setNext(nullptr);
-                current->getData().setId(courseId);
-                current->getData().setBooked(true);
+                current->getData()->setId(courseId);
+                current->getData()->setBooked(true);
             }else throw AlreadyExists();
         }
         void removeLecture(int hour, int room){
-            if(roomsAndHours[hour][room]->getData().getBooked()){
+            if(roomsAndHours[hour][room]->getData()->getBooked()){
+                lectures--;
+                hoursCount[hour]--;
+                roomsCount[room]--;
+                if(hoursCount[hour]==0) hoursCount[hours]--;
+                if(roomsCount[room]==0) roomsCount[rooms]--;
                 LLnode<roomBook>* current = roomsAndHours[hour][room];
                 LLnode<roomBook>* head =freeRooms[hour];
                 current->setNext(head);
-                head->setPrev(current);
+                if(head) head->setPrev(current);
                 freeRooms[hour] = current;
-                current->getData().setId(room);
-                current->getData().setBooked(false);
+                current->getData()->setId(room);
+                current->getData()->setBooked(false);
             }else throw DoesNotExist();
         }
         void getFreeRoomsAtHour(int hour, int **rooms, int* numOfRooms){
-            *numOfRooms = 0;
-            LLnode<roomBook> * itr = *freeRooms[hour];
-            while(itr){
-                (*numOfRooms)++;
+            if(hour < 0 || hour > hours-1 || !rooms || !numOfRooms) throw IllegalInitialization();
+            int counter = 0;
+            LLnode<roomBook> * itr = freeRooms[hour];
+            while(itr && !itr->getData()->getBooked()){
+                counter++;
                 itr = itr->getNext();
             }
-            rooms = new int*[*numOfRooms];
-            itr = *freeRooms[hour];
+            if(counter == 0) throw DoesNotExist();
+            *numOfRooms = counter;
+            *rooms = new int[*numOfRooms];
+            itr = freeRooms[hour];
             for(int i=0; i < (*numOfRooms);i++){
-                rooms[i] = new int(itr->getData().getId());
+                (*rooms)[i] = (itr->getData()->getId());
                 itr = itr->getNext();
             }
         }

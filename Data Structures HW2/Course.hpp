@@ -18,6 +18,7 @@ namespace DataStructures{
 		int courseID;
 		AVLTree<LectureInfo, int>* scheduled;
 	public:
+        course():courseID(0), scheduled(nullptr){}
 		course(int number): courseID(number), scheduled(nullptr){
 			scheduled = new (std::nothrow) AVLTree<LectureInfo, int>();
 			if(!scheduled) throw OutOfMemory();
@@ -26,8 +27,17 @@ namespace DataStructures{
             courseID = newCourse.getCourseID();
             scheduled = new AVLTree<LectureInfo, int>(*newCourse.getScheduled());
         }
+        course& operator=(course& newCourse){
+            if(this != &newCourse){
+                delete this->scheduled;
+                courseID = newCourse.getCourseID();
+                scheduled = new AVLTree<LectureInfo, int>(*newCourse.getScheduled());
+            }
+            return *this;
+        }
         void addLecture(int hour, int room){
             //should check if already exists
+            
             scheduled->insert(LectureInfo(hour,room),courseID);
         }
         void removeLecture(int hour, int room){
@@ -42,6 +52,7 @@ namespace DataStructures{
             //scheduled = new  AVLTree<LectureInfo, int>(*newSchedule);
             scheduled = newSchedule;
         }
+        int getLecNum(){return scheduled->getNodeCount();};
 		bool operator==(const course& c){
 			return (courseID == c.courseID);
 		}
