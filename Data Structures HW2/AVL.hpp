@@ -274,6 +274,7 @@ namespace DataStructures{
 	//Swaps location of two given nodes (this is used for a special case in the remove function)
 	template<class K, class D>
 	void AVLTree<K,D>::swapNodes(node<K,D>* a, node<K,D>* b){
+        if(!a || !b)return;
 		K* tempKey = a->getKeyPtr();
 		D* tempData = a->getDataPtr();
 		a->setKeyPtr(b->getKeyPtr());

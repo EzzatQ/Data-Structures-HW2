@@ -53,6 +53,7 @@ public:
         courses->getData(*courseID).removeLecture(hour, roomID);
         if(courses->getData(*courseID).getLecNum()==0)
             courses->remove(*courseID);
+        delete courseID;
     }
     
     
@@ -93,6 +94,7 @@ public:
             delete[] array1;
             delete[] array2;
             AVLTree<DataStructures::LectureInfo, int>* newTree = treeFill(array3, m+n);
+            delete []array3;
             courses->remove(oldCourseID);
             courses->getData(newCourseID).setScheduled(newTree);
         }catch(DoesNotExist a){

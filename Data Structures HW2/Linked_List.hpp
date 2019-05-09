@@ -172,17 +172,17 @@ namespace DataStructures{
         }
         ~RH(){
             for (int i = 0; i < hours; i++) {
-                LLnode<roomBook>* current = freeRooms[i];
-                for (int j = 1 ; j < rooms; j++) {
-                    LLnode<roomBook>* next = current->getNext();
-                    delete current;
-                    current = next;
+                LLnode<roomBook>** current = roomsAndHours[i];
+                for (int j = 0 ; j < rooms; j++) {
+                    delete current[j];
                 }
             }
-            delete freeRooms;
+            delete[] freeRooms;
             for(int a = 0; a < hours;a++)
-                delete roomsAndHours[a];
-            delete roomsAndHours;
+                delete[] roomsAndHours[a];
+            delete[] roomsAndHours;
+            delete[] hoursCount;
+            delete[] roomsCount;
         }
         
     };

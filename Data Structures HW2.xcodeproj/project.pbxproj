@@ -277,6 +277,7 @@
 		52C32D052266259900AAF835 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -287,6 +288,7 @@
 		52C32D062266259900AAF835 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N6W2FVLFTJ;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;

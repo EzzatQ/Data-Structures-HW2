@@ -103,7 +103,7 @@ StatusType GetAllLecturesByCourse(void *DS, int courseID, int **hours, int **roo
 
 void Quit(void** DS){
     if(*DS){
-        delete *DS;
+        delete (CS_system *)(*DS);
         *DS = nullptr;
     }
 }
