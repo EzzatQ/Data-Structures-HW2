@@ -83,6 +83,7 @@ public:
         if(oldCourseID < 1 || newCourseID < 1) throw IllegalInitialization();
           AVLTree<DataStructures::LectureInfo, int>* prevTree = courses->getData(oldCourseID).getScheduled();
         if(oldCourseID == newCourseID) return;
+        newCourseId_update(prevTree->getRoot(), newCourseID);
         try{
             AVLTree<DataStructures::LectureInfo, int>* currTree = courses->getData(newCourseID).getScheduled();
             int m = currTree->getNodeCount();
@@ -136,8 +137,13 @@ public:
     }
     
     
-    
-    ///////////////// filling a tree should be moved i think
+    ///updates the time table with the new courseId
+    void newCourseId_update(node<LectureInfo,int>* oldIDTree, int newId){
+        
+        (timeTable->getRoomsAndHours())[oldIDTree->getKey().getHour()][oldIDTree->getKey().getRoom()]->getData()->setId(newId);
+        
+    }
+    //// fills a new tree from a sorted array
     void treeFill_aux(node<DataStructures::LectureInfo, int> * root,node<DataStructures::LectureInfo, int> ** array,int start,int finish){
         root->setLeft(nullptr);
         root->setRight(nullptr);
@@ -159,15 +165,22 @@ public:
     ///////////////////////
     
     
-    
+    //calculates the efficiency as requested
 	void CalculateScheduleEfficiency(float *efficiency){
         *efficiency = timeTable->getEfficiency();
         if(*efficiency == -1) throw Failure();
     }
+    
+    
+    //returns an array poinet be rooms containing the empty rooms
+    //in the given hour, and their number in numOfRooms
     void GetAllFreeRoomsByHour(int hour, int **rooms, int* numOfRooms){
-        //check for exceptions
+        if(hour < 0 || !rooms || !numOfRooms) throw IllegalInitialization();
         timeTable->getFreeRoomsAtHour(hour, rooms, numOfRooms);
     }
+    
+    //fills the information about the booked lecture of a course in two arrays
+    //pointed by hours, rooms and the lectures number in numOfLecture
     void GetAllLecturesByCourse(int courseID, int **hours, int **rooms, int *numOfLectures){
         if(courseID <= 0 || !hours || !rooms || !numOfLectures) throw IllegalInitialization();
         
@@ -185,6 +198,8 @@ public:
         for(int i = 0; i < dataNum; i++) delete data[i];
         delete[] data;
     }
+    
+    
     ~Schedule(){
         delete timeTable;
         delete courses;

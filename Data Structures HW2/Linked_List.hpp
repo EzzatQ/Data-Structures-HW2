@@ -11,8 +11,9 @@
 
 #include "Exceptions.hpp"
 
+
 namespace DataStructures{
-    
+    //////////////////////////////////////////////////////////////////////
     template<class D>
     class LLnode{
         D* data;
@@ -62,7 +63,8 @@ namespace DataStructures{
     public:
         RH(int hours, int rooms):hours(hours),rooms(rooms){
             if(!(hours > 0 and rooms > 0))
-            {//something
+            {
+                throw IllegalInitialization();
             }
             lectures = 0;
             hoursCount = new (std::nothrow) int[hours+1];
@@ -86,7 +88,6 @@ namespace DataStructures{
             
             
             freeRooms = new LLnode<roomBook>* [hours];
-            // dont remember if i should do new...
             roomBook first =  roomBook(0);
             for (int i = 0; i < hours; i++) {
                 freeRooms[i] = new LLnode<roomBook>(first);
@@ -104,23 +105,27 @@ namespace DataStructures{
                 parent->setNext(nullptr);
             }
         }
+        
         int getHours(){ return hours; }
         int getRooms(){ return rooms; }
+        LLnode<roomBook> *** getRoomsAndHours(){return roomsAndHours;}
         bool isBooked(int hour, int room){
             return roomsAndHours[hour][room]->getData()->getBooked();
-            
         }
+        
         int getCourseAt(int hour, int room){
             if(hour < 0 || hour > hours-1 || room < 0 || room > rooms-1) throw IllegalInitialization();
             if(isBooked(hour, room))
                 return roomsAndHours[hour][room]->getData()->getId();
             else return -1;
         }
+        
         float getEfficiency(){
             if(lectures>0)
                 return (float)lectures/(float)(hoursCount[hours]*roomsCount[rooms]);
             return -1;
         }
+        
         void bookLecture(int hour, int room, int courseId){
             if(hour > hours-1 || room > rooms -1) throw IllegalInitialization();
             if(!roomsAndHours[hour][room]->getData()->getBooked()){
@@ -143,6 +148,7 @@ namespace DataStructures{
                 current->getData()->setBooked(true);
             }else throw AlreadyExists();
         }
+        
         void removeLecture(int hour, int room){
             if(roomsAndHours[hour][room]->getData()->getBooked()){
                 lectures--;
@@ -159,6 +165,7 @@ namespace DataStructures{
                 current->getData()->setBooked(false);
             }else throw DoesNotExist();
         }
+        // returns the free rooms at the given hour
         void getFreeRoomsAtHour(int hour, int **rooms, int* numOfRooms){
             if(hour < 0 || hour > hours-1 || !rooms || !numOfRooms) throw IllegalInitialization();
             int counter = 0;
@@ -176,6 +183,7 @@ namespace DataStructures{
                 itr = itr->getNext();
             }
         }
+        
         ~RH(){
             for (int i = 0; i < hours; i++) {
                 LLnode<roomBook>** current = roomsAndHours[i];

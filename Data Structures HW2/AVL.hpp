@@ -387,7 +387,7 @@ namespace DataStructures{
 		else AVLTree<K,D>::remove_aux(key, n->getRight());
 	}
 	
-	//Depending on whoich situation the tree is in, performs needed rotations to
+	//Depending on which situation the tree is in, performs needed rotations to
 	// keep tree balanced
 	template<class K, class D>
 	void AVLTree<K, D>::balance(node<K, D>* n){
@@ -457,26 +457,6 @@ namespace DataStructures{
 		n->setParent(pivot);
 		if(pivot->getLeft()) pivot->getLeft()->setParent(pivot);
 		if(pivot->getRight()) pivot->getRight()->setParent(pivot);
-        //////
-//        int nHeight =0;
-//        if(n->getLeft()&&pivot->getLeft()){
-//            nHeight = n->getLeft()->height > pivot->getLeft().height ? n->getLeft()->height : pivot->getLeft().height;
-//            nHeight++;
-//        }
-//        else if(pivot->getLeft())
-//            nHeight = pivot->getLeft().height + 1;
-//        else
-//            nHeight = n->getLeft()->height + 1;
-//        int pivHeight =0;
-//        if(pivot->getRight()){
-//            pivHeight = pivot->getRight().height > nHeight ? pivot->getRight().height : nHeight;
-//            pivHeight++;
-//        }else{
-//            pivHeight = nHeight + 1;
-//        }
-            
-        //n->setHeight(nHeight);
-        //pivot->setHeight(pivHeight);
 		n->update();
 		pivot->update();
 	}
