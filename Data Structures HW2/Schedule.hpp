@@ -10,7 +10,7 @@
 #define Schedule_hpp
 
 #include "AVL.hpp"
-#include "Linked_List.hpp"
+#include "RH.hpp"
 #include "Course.hpp"
 #include "Lecture_Info.hpp"
 
