@@ -17,22 +17,27 @@
 
 using namespace DataStructures;
 
-class CS_system{
+class Schedule{
     RH * timeTable;
 	AVLTree<int, course> * courses;
 public:
-	CS_system(int hours, int rooms){
+    
+	Schedule(int hours, int rooms){
         if(hours < 1 || rooms < 1) throw IllegalInitialization();
         timeTable = new RH(hours, rooms);
         courses = new AVLTree<int, course>();
 	}
+    
+    
+    // Adds a lecture of the given course in the given room and time
+    // it updates the timetable and then updates the courses tree
 	void AddLecture(int hour, int roomID, int courseID){
         if(hour < 0 || roomID < 0 || courseID < 1) throw IllegalInitialization();
         timeTable->bookLecture(hour, roomID, courseID);
         try{
             course *a = &(courses->getData(courseID));
             a->addLecture(hour, roomID);
-        }catch(...){// should specify the exception
+        }catch(DoesNotExist c){
             course *newCourse = new course(courseID);
             courses->insert(courseID, *newCourse);
             delete newCourse;
@@ -40,24 +45,30 @@ public:
             b->addLecture(hour, roomID);
         }
 	}
+    
+    
+    //returns the course id of the lecture that is booked in the given hour and room
+    //if no lecture is booked in that time and room courseId would contain -1
 	void GetCourseID(int hour, int roomID, int *courseID){
         if(hour < 0 || roomID < 0) throw IllegalInitialization();
         *courseID = timeTable->getCourseAt(hour, roomID);
     }
+    
+    
+    //deletes the lecture that si booked in the given hour and room
 	void DeleteLecture(int hour, int roomID){
-        //check for exceptions, and if this even works
         if(hour < 0 || roomID < 0) throw IllegalInitialization();
         int *courseID = new int(0);
         try{
             GetCourseID(hour, roomID, courseID);
             timeTable->removeLecture(hour, roomID);
             courses->getData(*courseID).removeLecture(hour, roomID);
-        }catch(IllegalInitialization a){
+        }catch(IllegalInitialization exp){
             delete courseID;
-            throw a;
-        }catch(DoesNotExist a){
+            throw IllegalInitialization();
+        }catch(DoesNotExist exp){
             delete courseID;
-            throw a;
+            throw DoesNotExist();
         }
         if(courses->getData(*courseID).getLecNum()==0)
             courses->remove(*courseID);
@@ -65,15 +76,18 @@ public:
     }
     
     
-    
+    //changes the id of a given course, first checks if the course exists then checks
+    //if a course of the new id exists to merge them, if not just changes
+    //it to the new courseid and inserts it in the right place
 	void ChangeCourseID(int oldCourseID, int newCourseID){
         if(oldCourseID < 1 || newCourseID < 1) throw IllegalInitialization();
-        if(oldCourseID == newCourseID) return;// should be fixed
+          AVLTree<DataStructures::LectureInfo, int>* prevTree = courses->getData(oldCourseID).getScheduled();
+        if(oldCourseID == newCourseID) return;
         try{
-            AVLTree<DataStructures::LectureInfo, int>* prevTree = courses->getData(oldCourseID).getScheduled();
             AVLTree<DataStructures::LectureInfo, int>* currTree = courses->getData(newCourseID).getScheduled();
             int m = currTree->getNodeCount();
             int n = prevTree->getNodeCount();
+    
             node<DataStructures::LectureInfo, int> ** array1 = new node<DataStructures::LectureInfo, int> *[m];
             node<DataStructures::LectureInfo, int> ** array2 = new node<DataStructures::LectureInfo, int> *[n];
             node<DataStructures::LectureInfo, int> ** array3 = new node<DataStructures::LectureInfo, int> *[m+n];
@@ -81,6 +95,7 @@ public:
             prevTree->fillAnArray(array2);
                 node<DataStructures::LectureInfo, int> ** p1 = array1;
                 node<DataStructures::LectureInfo, int> ** p2 = array2;
+            
             int x=0, y=0;
                 while(x+y < m+n){
                     if(x < m && y < n){
@@ -101,13 +116,14 @@ public:
                 }
             delete[] array1;
             delete[] array2;
+            
             AVLTree<DataStructures::LectureInfo, int>* newTree = treeFill(array3, m+n);
-            //
+            
             for (int i = 0; i < m+n; i++) {
                 delete array3[i];
             }
             delete []array3;
-            ////
+            
             courses->remove(oldCourseID);
             courses->getData(newCourseID).setScheduled(newTree);
         }catch(DoesNotExist a){
@@ -118,6 +134,9 @@ public:
             delete newData;
         }
     }
+    
+    
+    
     ///////////////// filling a tree should be moved i think
     void treeFill_aux(node<DataStructures::LectureInfo, int> * root,node<DataStructures::LectureInfo, int> ** array,int start,int finish){
         root->setLeft(nullptr);
@@ -138,6 +157,8 @@ public:
         return new AVLTree<DataStructures::LectureInfo, int>(root,m);
     }
     ///////////////////////
+    
+    
     
 	void CalculateScheduleEfficiency(float *efficiency){
         *efficiency = timeTable->getEfficiency();
@@ -164,7 +185,7 @@ public:
         for(int i = 0; i < dataNum; i++) delete data[i];
         delete[] data;
     }
-    ~CS_system(){
+    ~Schedule(){
         delete timeTable;
         delete courses;
     }

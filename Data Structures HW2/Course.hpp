@@ -36,8 +36,6 @@ namespace DataStructures{
             return *this;
         }
         void addLecture(int hour, int room){
-            //should check if already exists
-            
             scheduled->insert(LectureInfo(hour,room),courseID);
         }
         void removeLecture(int hour, int room){
