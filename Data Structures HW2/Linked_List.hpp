@@ -76,7 +76,7 @@ namespace DataStructures{
             for (int i = 0; i < hours+1; i++) {
                 hoursCount[i] = 0;
             }
-            for (int j = 0; j < hours+1; j++) {
+            for (int j = 0; j < rooms+1; j++) {
                 roomsCount[j] = 0;
             }
             
