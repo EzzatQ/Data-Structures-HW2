@@ -12,27 +12,27 @@
 #include "Exceptions.hpp"
 
 namespace DataStructures{
-	
-	template<class D>
-	class LLnode{
-		D* data;
-		LLnode* prev;
-		LLnode* next;
-	public:
-		LLnode(D& d): prev(nullptr), next(nullptr){
+    
+    template<class D>
+    class LLnode{
+        D* data;
+        LLnode* prev;
+        LLnode* next;
+    public:
+        LLnode(D& d): prev(nullptr), next(nullptr){
             data = new D(d);
         }
         ~LLnode(){
             delete data;
         }
         LLnode(LLnode& n){};
-		LLnode& operator=(LLnode& n);
-		void setPrev(LLnode* p){ prev = p; }
-		void setNext(LLnode* n){ next = n; }
-		LLnode* getPrev(){ return prev;  }
-		LLnode* getNext(){ return next; }
+        LLnode& operator=(LLnode& n);
+        void setPrev(LLnode* p){ prev = p; }
+        void setNext(LLnode* n){ next = n; }
+        LLnode* getPrev(){ return prev;  }
+        LLnode* getNext(){ return next; }
         D* getData(){ return data; }
-	};
+    };
     
     //////////////////////////////////////////////////////////////////////
     
@@ -48,7 +48,7 @@ namespace DataStructures{
         bool getBooked(){ return booked; }
     };
     
-	//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
     
     
     class RH{
@@ -65,8 +65,14 @@ namespace DataStructures{
             {//something
             }
             lectures = 0;
-            hoursCount = new int[hours+1];
-            roomsCount = new int[rooms+1];
+            hoursCount = new (std::nothrow) int[hours+1];
+            if(!hoursCount) throw OutOfMemory();
+            roomsCount = new (std::nothrow) int[rooms+1];
+            if(!roomsCount){
+                delete[] hoursCount;
+                throw OutOfMemory();
+            }
+            
             for (int i = 0; i < hours+1; i++) {
                 hoursCount[i] = 0;
             }
@@ -111,10 +117,10 @@ namespace DataStructures{
             else return -1;
         }
         float getEfficiency(){
-                if(lectures>0)
-                    return (float)lectures/(float)(hoursCount[hours]*roomsCount[rooms]);
-                           return -1;
-               }
+            if(lectures>0)
+                return (float)lectures/(float)(hoursCount[hours]*roomsCount[rooms]);
+            return -1;
+        }
         void bookLecture(int hour, int room, int courseId){
             if(hour > hours-1 || room > rooms -1) throw IllegalInitialization();
             if(!roomsAndHours[hour][room]->getData()->getBooked()){
@@ -186,27 +192,7 @@ namespace DataStructures{
         }
         
     };
-//    template<class D>
-//    class LinkedList{
-//        LLnode<D>* head;
-//        int nodeCount;
-//    public:
-//        LinkedList(): nodeCount(0) {
-//            head = new (std::nothrow) LLnode<D>(nullptr);
-//            if(!head) throw OutOfMemory();
-//        }
-//        ~LinkedList();
-//        LinkedList(LinkedList& ll);
-//        LinkedList& operator=(LinkedList& ll);
-//        LLnode<D>* getHead();
-//        int getNodeCount();
-//        void insert(D& data);
-//        void contains(D& data);
-//        D& getData(D& data);
-//        void remove(D& data);
-//        template<class Func>
-//        void applyToAll(Func& f);
-//    };
+
 }
 
 

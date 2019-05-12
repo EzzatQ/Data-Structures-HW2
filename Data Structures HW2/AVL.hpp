@@ -40,14 +40,6 @@ namespace DataStructures{
 		
 
         node(node& n){
-//            this->data = n.data;
-//            this->parent = n.parent;
-//            this->left = n.left;
-//            this->right = n.right;
-//            this->kids = n.kids;
-//            this->BF = n.BF;
-//            //this->height = n.heigh;
-//            //Ezzat should resolve this
             try{
                 this->key = new (std::nothrow) K(*n.key);
                 this->data = new (std::nothrow) D(*n.data);

@@ -48,9 +48,17 @@ public:
         //check for exceptions, and if this even works
         if(hour < 0 || roomID < 0) throw IllegalInitialization();
         int *courseID = new int(0);
-        GetCourseID(hour, roomID, courseID);
-        timeTable->removeLecture(hour, roomID);
-        courses->getData(*courseID).removeLecture(hour, roomID);
+        try{
+            GetCourseID(hour, roomID, courseID);
+            timeTable->removeLecture(hour, roomID);
+            courses->getData(*courseID).removeLecture(hour, roomID);
+        }catch(IllegalInitialization a){
+            delete courseID;
+            throw a;
+        }catch(DoesNotExist a){
+            delete courseID;
+            throw a;
+        }
         if(courses->getData(*courseID).getLecNum()==0)
             courses->remove(*courseID);
         delete courseID;
@@ -60,7 +68,7 @@ public:
     
 	void ChangeCourseID(int oldCourseID, int newCourseID){
         if(oldCourseID < 1 || newCourseID < 1) throw IllegalInitialization();
-        if(oldCourseID == newCourseID) return;
+        if(oldCourseID == newCourseID) return;// should be fixed
         try{
             AVLTree<DataStructures::LectureInfo, int>* prevTree = courses->getData(oldCourseID).getScheduled();
             AVLTree<DataStructures::LectureInfo, int>* currTree = courses->getData(newCourseID).getScheduled();
@@ -94,7 +102,12 @@ public:
             delete[] array1;
             delete[] array2;
             AVLTree<DataStructures::LectureInfo, int>* newTree = treeFill(array3, m+n);
+            //
+            for (int i = 0; i < m+n; i++) {
+                delete array3[i];
+            }
             delete []array3;
+            ////
             courses->remove(oldCourseID);
             courses->getData(newCourseID).setScheduled(newTree);
         }catch(DoesNotExist a){
@@ -102,6 +115,7 @@ public:
             newData->setCourseID(newCourseID);
             courses->insert(newCourseID, *newData);
             courses->remove(oldCourseID);
+            delete newData;
         }
     }
     ///////////////// filling a tree should be moved i think
@@ -140,13 +154,14 @@ public:
         int dataNum = currCourse.getLecNum();
         node<LectureInfo, int>** data = new node<LectureInfo, int>*[dataNum];
         currCourse.getScheduled()->fillAnArray(data);
-        *hours = new int[dataNum];
-        *rooms = new int[dataNum];
+        *hours = (int *)malloc(sizeof(int) * dataNum);
+        *rooms = (int *)malloc(sizeof(int) * dataNum);
         for (int i = 0; i < dataNum; i++) {
             (*hours)[i] = (data[i]->getKey().getHour());
             (*rooms)[i] = (data[i]->getKey().getRoom());
         }
         *numOfLectures = dataNum;
+        for(int i = 0; i < dataNum; i++) delete data[i];
         delete[] data;
     }
     ~CS_system(){
