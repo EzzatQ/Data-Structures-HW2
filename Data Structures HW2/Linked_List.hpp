@@ -163,7 +163,7 @@ namespace DataStructures{
             }
             if(counter == 0) throw DoesNotExist();
             *numOfRooms = counter;
-            *rooms = new int[*numOfRooms];
+            *rooms =(int*)malloc(sizeof(int) * (*numOfRooms));
             itr = freeRooms[hour];
             for(int i=0; i < (*numOfRooms);i++){
                 (*rooms)[i] = (itr->getData()->getId());

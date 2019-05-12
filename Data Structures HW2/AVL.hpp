@@ -30,7 +30,7 @@ namespace DataStructures{
 		
 		int BF;
 		int height;
-		
+        void setHeight(int newh){if(newh > 0) height = newh;}
 		node(const K& key, D& data): key(nullptr), data(nullptr), parent(nullptr), left(nullptr), right(nullptr), kids(0), BF(0), height(0){
 			try{
 				this->key = new (std::nothrow) K(key);
@@ -82,8 +82,8 @@ namespace DataStructures{
 		D* getDataPtr(){return data;}
 		K* getKeyPtr(){return key;}
 		int getKids() { return kids;}
-		int getBF() { update(); return BF;}
-		int getHeight() { update(); return height;}
+		int getBF() { return BF;}
+		int getHeight() { return height;}
 		
 		node* getLeft(){ return left;}
 		node* getRight(){ return right;}
@@ -165,13 +165,12 @@ namespace DataStructures{
 		}
 		
 		void update(){
-			if(left) left->update();
-			if(right) right->update();
 			int lheight = left ? left->height : 0;
 			int rheight = right ? right->height : 0;
 			height = lheight > rheight ? lheight : rheight;
 			height++;
 			BF = lheight - rheight;
+            //if(parent) parent->update();
 		}
 		
 	};
@@ -328,26 +327,26 @@ namespace DataStructures{
 		if(n->getKey() > in->getKey()){
 			if(n->getLeft()){
 				AVLTree<K,D>::insert_aux(n->getLeft(),in);
-				n->update();
 			}
 			else {
 				n->setLeft(in);
 				in->setParent(n);
 				n->update();
 				nodeCount++;
+                balanceAll(n);
 			}
 		}
 		else if(n->getRight()){
 			AVLTree<K,D>::insert_aux(n->getRight(), in);
-			n->update();
 		}
 		else {
 			n->setRight(in);
 			in->setParent(n);
 			n->update();
 			nodeCount++;
+            balanceAll(n);
 		}
-		balance(n);
+
 	}
 	
 	//Removes node  of given key while maintaining balance of the tree
@@ -462,10 +461,30 @@ namespace DataStructures{
 		if(n == root) root = pivot;
 		else if(nParent->getLeft() == n) nParent->setLeft(pivot);
 		else if(nParent->getRight() == n) nParent->setRight(pivot);
-		pivot->setParent(n->getParent());
+		pivot->setParent(nParent); //
 		n->setParent(pivot);
 		if(pivot->getLeft()) pivot->getLeft()->setParent(pivot);
 		if(pivot->getRight()) pivot->getRight()->setParent(pivot);
+        //////
+//        int nHeight =0;
+//        if(n->getLeft()&&pivot->getLeft()){
+//            nHeight = n->getLeft()->height > pivot->getLeft().height ? n->getLeft()->height : pivot->getLeft().height;
+//            nHeight++;
+//        }
+//        else if(pivot->getLeft())
+//            nHeight = pivot->getLeft().height + 1;
+//        else
+//            nHeight = n->getLeft()->height + 1;
+//        int pivHeight =0;
+//        if(pivot->getRight()){
+//            pivHeight = pivot->getRight().height > nHeight ? pivot->getRight().height : nHeight;
+//            pivHeight++;
+//        }else{
+//            pivHeight = nHeight + 1;
+//        }
+            
+        //n->setHeight(nHeight);
+        //pivot->setHeight(pivHeight);
 		n->update();
 		pivot->update();
 	}
