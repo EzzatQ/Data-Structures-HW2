@@ -122,7 +122,7 @@ namespace DataStructures{
         
         float getEfficiency(){
             if(lectures>0)
-                return (float)lectures/(float)(hoursCount[hours]*roomsCount[rooms]);
+                return (float)lectures/(float)(hoursCount[hours]*rooms);
             return -1;
         }
         
